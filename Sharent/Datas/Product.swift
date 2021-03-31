@@ -51,6 +51,7 @@ class  Product
 
 class ProductInformation
 {
+    static var type:String?
     static var userId:String?
     static var userName:String?
     static var userImage:String?
@@ -60,6 +61,8 @@ class ProductInformation
     static var marchantAddress:String?
     static var marchantLat:String?
     static var marchantLang:String?
+   
+    static var  listingType:String?
     static var marchantRemarks:String?
     static var campanyImage:String?
     static var productImage1:String?
@@ -69,13 +72,15 @@ class ProductInformation
     static var productImage5:String?
     static var productName:String?
     static var productPrice:String?
-
+    static var price:String?
     static var productDescription:String?
     static var productDetails:String?
+    static var productCare:String?
     static var productRental:String?
     static var productFee:String?
     static var productFeePercentage:String?
     static var productTotalFee:String?
+    static var modifiedDate:String?
     static var productDiscount:String?
     static var productShipping:String?
     static var productRentalDays:String?
@@ -93,20 +98,30 @@ class ProductInformation
     static var productBuyerLang:String?
     static var productBuyerAddress:String?
     static var productCollectionmethod:String?
+    static var productDeliveryType:String?
     static var productReturnmethod:String?
     static var productReferenceId:String?
     static var productOrderstatus:String?
+    static var status:String?
     static var productStatus:String?
     static var productVehicle:String?
     static var productCancelFee : String?
     static var productCategoryId:String?
     static var productCategoryName:String?
+    static var productCategory_position:String?
+    static var productMaximumQunantity:String?
     static var companyName:String?
     static var minimumdays:String?
     static var attribute:[String:AnyObject]?
     static var availableAttribute:[[String:AnyObject]]?
     static var relatedProducts:[AnyObject]?
+   
+    static var tagNames:String?
+    static var tagPositions:String?
+    static var tagIds:String?
     
+    static var bookingDuration:String?
+    static var advanceBookingDays:String?
     
     
     static var attribute1Name:String?
@@ -123,9 +138,11 @@ class ProductInformation
 
     init(productDetailsDictionay:[String:Any])
     {
+         ProductInformation.type                =  productDetailsDictionay["type"]as? String ?? ""
+          ProductInformation.listingType                =  productDetailsDictionay["listing_type"]as? String
          ProductInformation.userId                =  productDetailsDictionay["user_id"]as? String
         ProductInformation.userName               =  productDetailsDictionay["user_name"]as? String
-        ProductInformation.userImage              =  productDetailsDictionay["user_image"]as? String
+        ProductInformation.userImage              =  productDetailsDictionay["user_image"]as? String ?? ""
         ProductInformation.productID              =  productDetailsDictionay["product_id"]as? String
         ProductInformation.marchantId             = productDetailsDictionay["merchant_id"]as? String
         ProductInformation.marchantName           = productDetailsDictionay["merchant_name"] as? String
@@ -140,42 +157,67 @@ class ProductInformation
         ProductInformation.productImage3          = productDetailsDictionay["photo_android3"] as? String
         ProductInformation.productImage4          = productDetailsDictionay["photo_android4"] as? String
         ProductInformation.productImage5          = productDetailsDictionay["photo_android5"] as? String
-        ProductInformation.productName            = productDetailsDictionay["product_name"]  as? String
-        ProductInformation.productDescription     = productDetailsDictionay["description"] as? String
-        ProductInformation.productDetails           = productDetailsDictionay["product_details"] as? String
+        ProductInformation.productName            = productDetailsDictionay["product_name"]  as? String ?? ""
+        ProductInformation.productDescription     = productDetailsDictionay["description"] as? String ?? ""
+        ProductInformation.productDetails           = productDetailsDictionay["product_details"] as? String ?? ""
         
+        ProductInformation.productCare          = productDetailsDictionay["product_care"] as? String ?? ""
         
-        ProductInformation.productPrice           = productDetailsDictionay["product_price"] as? String
+         ProductInformation.price = productDetailsDictionay["price"] as? String
+        ProductInformation.productPrice           = productDetailsDictionay["product_price"] as? String ?? ""
         
         ProductInformation.productFee           = productDetailsDictionay["product_fee"] as? String
-        
+       
         ProductInformation.productFeePercentage           = productDetailsDictionay["product_fee_percentage"] as? String
         
-        ProductInformation.productDiscount        = productDetailsDictionay["discount_price"] as? String
-        ProductInformation.productShipping        = productDetailsDictionay["shipping_amount"] as? String
+        ProductInformation.productDiscount        = productDetailsDictionay["discount_price"] as? String ?? "0.00"
+        ProductInformation.productShipping        = productDetailsDictionay["shipping_amount"] as? String ?? "0.00"
       
-        ProductInformation.productRental          = productDetailsDictionay["rental_fee"] as? String
+        ProductInformation.productRental          = productDetailsDictionay["rental_fee"] as? String ?? "0.00"
         
-        ProductInformation.productRentalDays      = productDetailsDictionay["rental_period_days"] as? String
+        ProductInformation.productRentalDays      = productDetailsDictionay["rental_period_days"] as? String ?? "0.00"
         
-        ProductInformation.productTotalFee        = productDetailsDictionay["total_amount"] as? String
+        ProductInformation.productTotalFee        = productDetailsDictionay["total_amount"] as? String ?? "0.00"
         
-        ProductInformation.productCategoryId      = productDetailsDictionay["category"] as? String
-        ProductInformation.productCategoryName    = productDetailsDictionay["category_name"] as? String
+          ProductInformation.modifiedDate        = productDetailsDictionay["modified"] as? String ?? ""
+        
+        ProductInformation.productCategoryId      = productDetailsDictionay["category"] as? String ?? ""
+        ProductInformation.productCategoryName    = productDetailsDictionay["category_name"] as? String ?? ""
+       
+        ProductInformation.productCategory_position    = productDetailsDictionay["category_position"] as? String ?? ""
+       
+        
+        ProductInformation.productMaximumQunantity          = productDetailsDictionay["quantity"] as? String ?? ""
+        
+        ProductInformation.tagNames        = productDetailsDictionay["tags_name"] as? String ?? ""
+        
+        ProductInformation.tagIds        = productDetailsDictionay["tags"] as? String ?? ""
+        
+        ProductInformation.tagPositions        = productDetailsDictionay["tags_position"] as? String ?? ""
+        
+        ProductInformation.bookingDuration        = productDetailsDictionay["booking_duration"] as? String
+        
+         ProductInformation.advanceBookingDays        = productDetailsDictionay["advance_booking_date"] as? String
+        
+        
         ProductInformation.companyName            = productDetailsDictionay["company"] as? String
-        ProductInformation.minimumdays            = productDetailsDictionay["minimum_days"] as? String
+        ProductInformation.minimumdays            = productDetailsDictionay["minimum_days"] as? String ?? ""
         ProductInformation.attribute              = productDetailsDictionay["attribute"] as? [String:AnyObject]
         ProductInformation.availableAttribute     = productDetailsDictionay["available_attribute"] as? [[String:AnyObject]]
         ProductInformation.relatedProducts        = productDetailsDictionay["related_products"] as? [AnyObject]
         ProductInformation.productBuyerReviwed        = productDetailsDictionay["review"] as? String
         ProductInformation.productCollectionmethod = productDetailsDictionay["collection_method"] as? String
+        
+         ProductInformation.productDeliveryType = productDetailsDictionay["delivery_type"] as? String
+        
         ProductInformation.productReturnmethod    = productDetailsDictionay["return_method"] as? String
-        ProductInformation.productReferenceId     = productDetailsDictionay["reference_id"] as? String
-        ProductInformation.productFromDate         = productDetailsDictionay["rental_period_startdate"] as? String
+        ProductInformation.productOrderId     = productDetailsDictionay["order_id"] as? String
+        ProductInformation.productFromDate         = productDetailsDictionay["rental_period_startdate"] as? String ?? ""
         ProductInformation.productStartTime         = productDetailsDictionay["start_time"] as? String
-        ProductInformation.productToDate          = productDetailsDictionay["rental_period_enddate"] as? String
-        ProductInformation.productEndTime         = productDetailsDictionay["end_time"] as? String
+        ProductInformation.productToDate          = productDetailsDictionay["rental_period_enddate"] as? String ?? ""
+        ProductInformation.productEndTime         = productDetailsDictionay["end_time"] as? String ?? ""
         ProductInformation.productOrderstatus      = productDetailsDictionay["order_status"] as? String
+         ProductInformation.status      = productDetailsDictionay["status"] as? String
         ProductInformation.productStatus      = productDetailsDictionay["status_name"] as? String
         ProductInformation.productVehicle      = productDetailsDictionay["vehicletype"] as? String
         ProductInformation.productCancelFee = productDetailsDictionay["cancel_fee"] as? String

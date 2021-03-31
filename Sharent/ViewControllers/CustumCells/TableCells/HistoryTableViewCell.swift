@@ -14,20 +14,37 @@ class HistoryTableViewCell: UITableViewCell
     
     @IBOutlet weak var mainBackgroundView: UIView!
     @IBOutlet weak var img_Product: UIImageView!
+    @IBOutlet weak var viewUnderimgProduct: UIView!
     @IBOutlet weak var lbl_Product_Name: UILabel!
     @IBOutlet weak var lblProductRate: UILabel!
     @IBOutlet weak var lblQuantity: UILabel!
-    @IBOutlet weak var lblProductAttribute: UILabel!
+    @IBOutlet weak var deliveryType: UILabel!
+    @IBOutlet weak var lblDate: UILabel!
+    
+//    @IBOutlet weak var lblProductAttribute: UILabel!
+    
+    @IBOutlet weak var lblAttribute2: UILabel!
     @IBOutlet weak var lbl_Order_Number: UILabel!
     @IBOutlet weak var lblDateTitle: UILabel!
     @IBOutlet weak var lblDeliveryDate: UILabel!
     @IBOutlet weak var lblStatusTitle: UILabel!
     @IBOutlet weak var lbl_Product_Status: UILabel!
+  
+    @IBOutlet weak var ButtonsViewHeight: NSLayoutConstraint!
+  
     
+    
+
+    
+    
+    @IBOutlet weak var btn_Active: UIButton!
+    
+    @IBOutlet weak var btn_Cancel: UIButton!
+        
     
     //Profile Details
     
-    @IBOutlet weak var lblDate: UILabel!
+   
     @IBOutlet weak var lblName: UILabel!
     @IBOutlet weak var lblDays: UILabel!
     @IBOutlet weak var lblDescription: UILabel!

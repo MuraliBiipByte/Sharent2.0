@@ -9,20 +9,22 @@
 import UIKit
 import ActionSheetPicker
 import Stripe
+
 class CardListViewController: UIViewController, UITableViewDelegate , UITableViewDataSource
 {
    
     @IBOutlet weak var cardView: UIView!
     @IBOutlet weak var btnAddCard: UIButton!
-    
     @IBOutlet weak var imgArray: UIImageView!
     @IBOutlet weak var ImgCard: UIImageView!
     @IBOutlet weak var cardListTableView: UITableView!
-    
     @IBOutlet weak var imgCarImage: UIImageView!
     @IBOutlet weak var lblCardNumber: UILabel!
     var strUserId = String()
+    var customerId = String()
     var cardList = [AnyObject]()
+    
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -37,7 +39,7 @@ class CardListViewController: UIViewController, UITableViewDelegate , UITableVie
     }
     override func viewWillAppear(_ animated: Bool)
     {
-        self.title = "Payment Methods"
+        self.title = "PAYMENT METHODS"
         strUserId = UserDefaults.standard.value(forKey: "user_id")! as! String
         cardListTableView.isHidden = true
         self.getRecentCard()
@@ -46,7 +48,7 @@ class CardListViewController: UIViewController, UITableViewDelegate , UITableVie
     
     func getRecentCard()
     {
-        print(strUserId)
+       
         let paramsDic = ["api_key_data":WebServices.API_KEY,"user_id":strUserId]
         self.view.StartLoading()
         ApiManager().postRequest(service:WebServices.LALAMOVE_GET_ALL_CARDS, params: paramsDic )
@@ -67,7 +69,6 @@ class CardListViewController: UIViewController, UITableViewDelegate , UITableVie
                     self.cardListTableView.isHidden = false
                     self.cardListTableView.reloadData()
                 }
-                
             }
         }
     }
@@ -75,7 +76,7 @@ class CardListViewController: UIViewController, UITableViewDelegate , UITableVie
    
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
@@ -107,14 +108,19 @@ class CardListViewController: UIViewController, UITableViewDelegate , UITableVie
     {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cardlistCell") as! CardListTableViewCell
+        
         let cardNumber = self.cardList[indexPath.row]["card_last4"] as! String
         
         cell.lblCardNumber.text = String(format: " **** **** **** %@", cardNumber)
-        
         let cardName = String(describing:self.cardList[indexPath.row]["card_brand"]as AnyObject)
         let cardName1 = STPCard.brand(from: cardName)
         let cardImage = STPImageLibrary.brandImage(for: cardName1)
         cell.cardImage.image = cardImage
+        
+        
+        cell.cardDeleteBtn.addTarget(self, action: #selector(self.deleteSelectedCard), for: .touchUpInside)
+        cell.cardDeleteBtn.tag = indexPath.row
+        
         
         return cell
     }
@@ -132,4 +138,44 @@ class CardListViewController: UIViewController, UITableViewDelegate , UITableVie
         
     }
 
+    @objc func deleteSelectedCard(sender : UIButton?) {
+        
+        customerId = self.cardList[(sender?.tag)!]["customer_id"] as! String
+        
+        let paramsDic = ["api_key_data":WebServices.API_KEY,"user_id":self.strUserId,"customer_id":customerId] as [String : Any]
+        
+        self.view.StartLoading()
+        ApiManager().postRequest(service:WebServices.LALAMOVE_DELETE_CARD, params: paramsDic as [String : Any])
+        { (result, success) in
+            self.view.StopLoading()
+            
+            if success == false
+            {
+                self.showAlert(message: result as! String)
+                return
+            }
+            else
+            {
+                
+                self.cardList.remove(at: sender!.tag)
+                if self.cardList.count > 0
+                {
+                    self.cardListTableView.isHidden = false
+                    self.cardListTableView.reloadData()
+                }else{
+                    self.cardListTableView.isHidden = true
+                }
+                
+                
+                let response = result as! [String : Any]
+                let message = response ["message"]
+                print(message!)
+                //                            self.showAlert(message: message as! String)
+            }
+        }
+        
+    }
+    
+    
+    
 }

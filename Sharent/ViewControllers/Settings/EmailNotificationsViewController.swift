@@ -83,7 +83,7 @@ class EmailNotificationsViewController: UIViewController,UITableViewDelegate,UIT
     }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return arrEmailNotifications.count
@@ -96,9 +96,7 @@ class EmailNotificationsViewController: UIViewController,UITableViewDelegate,UIT
         cell.btnEmailNotifications.addTarget(self, action: #selector(switchTriggered), for: UIControlEvents.valueChanged)
         
         let status = String(describing:arrEmailNotificationsStatus[4])
-        
-        print(status)
-        
+       
         switch Int(status) {
         case 0:
             cell.btnEmailNotifications.setOn(false, animated: true)
@@ -116,8 +114,6 @@ class EmailNotificationsViewController: UIViewController,UITableViewDelegate,UIT
     {
         let status = String(describing:arrEmailNotificationsStatus[sender.tag])
         
-        print(status)
-        
         switch Int(status) {
         case 0:
             
@@ -129,7 +125,6 @@ class EmailNotificationsViewController: UIViewController,UITableViewDelegate,UIT
             return
         }
         
-        print("Changed\(self.arrEmailNotificationsStatus)")
         updateStatus()
         
         

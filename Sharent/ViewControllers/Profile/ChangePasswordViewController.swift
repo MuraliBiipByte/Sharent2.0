@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SkyFloatingLabelTextField
 
 class ChangePasswordViewController: UIViewController , UITextFieldDelegate {
 
@@ -66,7 +65,7 @@ class ChangePasswordViewController: UIViewController , UITextFieldDelegate {
         }
         self.view.StartLoading()
         let paramsDist = ["api_key_data":WebServices.API_KEY,"user_id":User.userID!,"user_type":User.usertype!,"telcode":User.telcode!,"phone":User.phone!,"password":self.txtCurrent_Password.text!,"new_password":self.txt_New_Password.text!,"new_confirm_password":self.txt_ReEnter_Password.text!] as [String : Any]
-        print(paramsDist)
+       
         ApiManager().postRequest(service: WebServices.CHANGE_PASSWORD, params: paramsDist)
         { (result, success) in
             self.view.StopLoading()
@@ -89,12 +88,12 @@ class ChangePasswordViewController: UIViewController , UITextFieldDelegate {
     }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
     
     @objc func backVc()

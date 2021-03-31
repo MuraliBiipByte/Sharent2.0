@@ -23,7 +23,7 @@ class ContactUsViewController: UIViewController
     {
         super.viewDidLoad()
 
-        self.title = "Contact Us"
+        self.title = "CONTACT US"
         
     }
 
@@ -96,13 +96,13 @@ class ContactUsViewController: UIViewController
     
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
 
     
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
 
 }

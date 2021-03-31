@@ -18,6 +18,8 @@ class MyReviewTableViewCell: UITableViewCell
 
     @IBOutlet weak var imgReviewPerson:UIImageView!
     
+    
+    @IBOutlet weak var mainBackgroundView: UIView!
     //See All Reviews
     @IBOutlet weak var imgUser: UIImageView!
     @IBOutlet weak var lbl_UserName: UILabel!

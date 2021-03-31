@@ -10,22 +10,39 @@ pod 'Firebase/Core'
 pod 'Firebase/Messaging'
 
 pod 'GoogleSignIn'
-
 pod 'FacebookLogin'
 pod 'FacebookCore'
+pod 'Fabric'
+pod 'Crashlytics'
 
 pod 'Alamofire'
-
-pod 'SkyFloatingLabelTextField'
-
 pod 'ActionSheetPicker'
 pod 'LGSideMenuController'
 pod 'SDWebImage'
-pod 'ImagePicker'
 pod 'GooglePlaces'
 pod 'GooglePlacePicker'
 pod 'GoogleMaps'
 pod 'Stripe'
+pod 'ImageSlideshow'
+pod "ImageSlideshow/SDWebImage"
+pod 'UITextView+Placeholder'
+pod 'CCBottomRefreshControl'
+
+pod 'Firebase/Analytics'
+pod 'Firebase/DynamicLinks'
+pod 'Firebase/Auth'
+
+pod 'MaterialComponents/Chips'
+
+ # Pods for SendBird-iOS
+  pod 'SendBirdSDK', '~> 3.0'
+  pod 'AlamofireImage'
+  pod 'MGSwipeTableCell'
+  pod 'FLAnimatedImage', '~> 1.0'
+  pod 'NYTPhotoViewer', '~> 1.1.0'
+  pod 'HTMLKit', '~> 2.0'
+  pod 'TTTAttributedLabel'
+  pod 'RSKImageCropper'
 
 post_install do |installer|
     installer.pods_project.build_configurations.each do |config|

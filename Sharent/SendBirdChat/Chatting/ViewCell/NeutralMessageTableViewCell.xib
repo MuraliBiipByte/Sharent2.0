@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="143" id="4Ob-bd-Kdq" customClass="NeutralMessageTableViewCell" customModule="Sharent" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="143"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4Ob-bd-Kdq" id="h3B-cJ-haS">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="142.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YP6-1Z-1c3" userLabel="Date Container View">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="24"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vFT-LB-IDj" userLabel="Left Line View">
+                                <rect key="frame" x="0.0" y="11.5" width="120" height="1"/>
+                                <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.74901960779999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="kgz-ea-Tux"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="21 Sep, 2016" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Vc-sN-wTz" userLabel="Date Label">
+                                <rect key="frame" x="124" y="5" width="72" height="14.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="12"/>
+                                <color key="textColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.74901960779999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I72-m2-vuj" userLabel="Right Line View">
+                                <rect key="frame" x="200" y="11.5" width="120" height="1"/>
+                                <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.74901960779999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="bxr-kW-YCU"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="1Vc-sN-wTz" firstAttribute="leading" secondItem="vFT-LB-IDj" secondAttribute="trailing" constant="4" id="6Zb-xK-Im4"/>
+                            <constraint firstItem="I72-m2-vuj" firstAttribute="centerY" secondItem="YP6-1Z-1c3" secondAttribute="centerY" id="G0g-Zr-DBZ"/>
+                            <constraint firstItem="I72-m2-vuj" firstAttribute="leading" secondItem="1Vc-sN-wTz" secondAttribute="trailing" constant="4" id="KRJ-Ad-UE0"/>
+                            <constraint firstItem="1Vc-sN-wTz" firstAttribute="centerX" secondItem="YP6-1Z-1c3" secondAttribute="centerX" id="R16-Qc-88i"/>
+                            <constraint firstItem="vFT-LB-IDj" firstAttribute="leading" secondItem="YP6-1Z-1c3" secondAttribute="leading" id="Y4Q-Vr-iuS"/>
+                            <constraint firstItem="vFT-LB-IDj" firstAttribute="centerY" secondItem="YP6-1Z-1c3" secondAttribute="centerY" id="Z65-je-LyY"/>
+                            <constraint firstAttribute="trailing" secondItem="I72-m2-vuj" secondAttribute="trailing" id="bJh-LB-XVX"/>
+                            <constraint firstItem="1Vc-sN-wTz" firstAttribute="centerY" secondItem="YP6-1Z-1c3" secondAttribute="centerY" id="gwu-Cp-1VE"/>
+                            <constraint firstAttribute="height" constant="24" id="r1N-aU-N99" userLabel="Date Container Height"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="12"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9C5-eO-gLd" userLabel="Message Container View">
+                        <rect key="frame" x="14" y="34" width="292" height="0.5"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_bell" translatesAutoresizingMaskIntoConstraints="NO" id="ftS-ZD-XCa" userLabel="Icon Image View">
+                                <rect key="frame" x="131" y="14" width="30" height="28.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28.5" id="l5q-Bx-qTn"/>
+                                    <constraint firstAttribute="width" constant="30" id="lh4-Sm-9W1"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="89T-7a-zY6" userLabel="Message Label">
+                                <rect key="frame" x="10" y="52.5" width="272" height="16"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" red="0.22352941179999999" green="0.2784313725" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.87843137250000003" green="0.98823529409999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.5" id="6B0-Zb-8Jt"/>
+                            <constraint firstItem="ftS-ZD-XCa" firstAttribute="top" secondItem="9C5-eO-gLd" secondAttribute="top" constant="14" id="JKC-MD-Ghe"/>
+                            <constraint firstAttribute="trailing" secondItem="89T-7a-zY6" secondAttribute="trailing" constant="10" id="MgQ-Mo-qkp"/>
+                            <constraint firstItem="ftS-ZD-XCa" firstAttribute="centerX" secondItem="9C5-eO-gLd" secondAttribute="centerX" id="YRq-d3-Xav"/>
+                            <constraint firstItem="89T-7a-zY6" firstAttribute="top" secondItem="ftS-ZD-XCa" secondAttribute="bottom" constant="10" id="aYE-Sq-ZRY"/>
+                            <constraint firstItem="89T-7a-zY6" firstAttribute="leading" secondItem="9C5-eO-gLd" secondAttribute="leading" constant="10" id="nqD-ZK-C3K"/>
+                            <constraint firstAttribute="bottom" secondItem="89T-7a-zY6" secondAttribute="bottom" constant="-68" id="uIJ-ed-QI5"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="YP6-1Z-1c3" secondAttribute="trailing" id="3Gq-ua-Fuj"/>
+                    <constraint firstItem="9C5-eO-gLd" firstAttribute="leading" secondItem="h3B-cJ-haS" secondAttribute="leading" constant="14" id="8oG-DQ-Ld5"/>
+                    <constraint firstItem="YP6-1Z-1c3" firstAttribute="centerX" secondItem="h3B-cJ-haS" secondAttribute="centerX" id="KRc-mK-Ia1"/>
+                    <constraint firstItem="YP6-1Z-1c3" firstAttribute="leading" secondItem="h3B-cJ-haS" secondAttribute="leading" id="a0s-HL-xz2"/>
+                    <constraint firstItem="YP6-1Z-1c3" firstAttribute="top" secondItem="h3B-cJ-haS" secondAttribute="top" id="v1Q-ew-9IC"/>
+                    <constraint firstAttribute="trailing" secondItem="9C5-eO-gLd" secondAttribute="trailing" constant="14" id="xn6-ps-ptD"/>
+                    <constraint firstItem="9C5-eO-gLd" firstAttribute="top" secondItem="YP6-1Z-1c3" secondAttribute="bottom" constant="10" id="zpm-v9-eT9"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="dateContainerHeight" destination="r1N-aU-N99" id="wee-mi-5Cy"/>
+                <outlet property="dateContainerViewBottomMargin" destination="zpm-v9-eT9" id="SEz-Jf-3EK"/>
+                <outlet property="dateContainerViewTopMargin" destination="v1Q-ew-9IC" id="Uvs-KZ-aJl"/>
+                <outlet property="dateSeperatorContainerView" destination="YP6-1Z-1c3" id="ufd-yD-YMv"/>
+                <outlet property="dateSeperatorLabel" destination="1Vc-sN-wTz" id="62d-L7-KfI"/>
+                <outlet property="iconImageViewBottomMargin" destination="aYE-Sq-ZRY" id="CkG-lC-Gy9"/>
+                <outlet property="iconImageViewHeight" destination="l5q-Bx-qTn" id="gFD-CC-uKv"/>
+                <outlet property="messageContainerViewBottomPadding" destination="uIJ-ed-QI5" id="dIq-Xr-Tah"/>
+                <outlet property="messageContainerViewLeftMargin" destination="8oG-DQ-Ld5" id="oqz-y4-4SN"/>
+                <outlet property="messageContainerViewLeftPadding" destination="nqD-ZK-C3K" id="74c-Y4-t8z"/>
+                <outlet property="messageContainerViewRightMargin" destination="xn6-ps-ptD" id="du3-vj-Ay3"/>
+                <outlet property="messageContainerViewRightPadding" destination="MgQ-Mo-qkp" id="1wh-fu-Cpj"/>
+                <outlet property="messageContainerViewTopPadding" destination="JKC-MD-Ghe" id="xlJ-F5-7OH"/>
+                <outlet property="messageLabel" destination="89T-7a-zY6" id="jc8-L3-NAE"/>
+            </connections>
+            <point key="canvasLocation" x="60.869565217391312" y="108.14732142857143"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="icon_bell" width="30" height="28.5"/>
+    </resources>
+</document>

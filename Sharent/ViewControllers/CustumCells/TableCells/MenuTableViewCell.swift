@@ -16,6 +16,8 @@ class MenuTableViewCell: UITableViewCell
     @IBOutlet weak var imageMenu:UIImageView!
     @IBOutlet weak var lblTitleMenu:UILabel!
     
+    @IBOutlet weak var lblCartCount: UILabel!
+    
     //Account
     
     @IBOutlet weak var lblProfileListName: UILabel!

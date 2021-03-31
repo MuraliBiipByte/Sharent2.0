@@ -46,34 +46,48 @@ class MyAccountViewController: UIViewController,UITableViewDelegate,UITableViewD
         profileView.layer.shadowOffset = CGSize.zero
         profileView.layer.shadowRadius = 3
         
+        
+        
+        
         // Do any additional setup after loading the view.
     }
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated) // No need for semicolon
+        var buttonIcon = UIImage()
         
-        
-        self.title = "My Account"
+        self.title = "MY ACCOUNT"
         
         scrollView.isHidden = true
         
         getUserDetails()
-        
-        if userLoginType == UserType.BUYER
+
+        if userLoginType == BUYER
         {
             arrProfileTitles = arrBuyerProfileTitles
             arrProfileIdentifiers = arrBuyerProfileIdentifiers
+            
         }
         else
         {
             arrProfileTitles = arrMerchantProfileTitles
             arrProfileIdentifiers = arrMerchantProfileIdentifiers
+            
         }
-        
+         buttonIcon = UIImage(named: "back")!
         imgProfile.layer.cornerRadius = imgProfile.frame.width/2
         imgProfile.layer.masksToBounds = true
         
+        imgProfile.layer.borderWidth = 0.2
+        imgProfile.layer.borderColor = NAVIGATION_COLOR.cgColor
+        
+        let leftBarButton = UIBarButtonItem(title: "Item", style: UIBarButtonItem.Style.done, target: self, action: #selector(back_Tapped))
+        leftBarButton.image = buttonIcon
+        leftBarButton.tintColor = UIColor.white
+        self.navigationItem.leftBarButtonItem = leftBarButton
+        
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return arrProfileTitles.count
@@ -82,16 +96,15 @@ class MyAccountViewController: UIViewController,UITableViewDelegate,UITableViewD
     {
         if (tableView.contentSize.height < tableView.frame.size.height)
         {
-            
             self.tblProfileList.isScrollEnabled = false
         }
         else
         {
-            
             self.tblProfileList.isScrollEnabled = true
         }
         return UITableViewAutomaticDimension
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTableViewCell")as! MenuTableViewCell
@@ -105,27 +118,23 @@ class MyAccountViewController: UIViewController,UITableViewDelegate,UITableViewD
     {
         let controllerId = arrProfileIdentifiers[indexPath.row]
         let viewController = storyboard?.instantiateViewController(withIdentifier: controllerId)
-        viewController?.title = arrProfileTitles[indexPath.row]
+        viewController?.title = arrProfileTitles[indexPath.row].uppercased()
         self.navigationController?.pushViewController(viewController!, animated: true)
         
     }
     @IBAction func btnHome_Tapped(_ sender: Any)
     {
         
-        UIView.animate(withDuration: 0.4, animations:{
-            
-            self.sideMenuController?.leftViewWidth = 280
-            
-            self.sideMenuController?.showLeftView(animated:true, completionHandler :self.callMenu)
-            
+        UIView.animate(withDuration: 0.4, animations:
+            {
+                self.sideMenuController?.leftViewWidth = self.view.frame.width - 100
+                self.sideMenuController?.showLeftView(animated:true, completionHandler :self.callMenu)
         })
     }
-    
     
     func callMenu ()
     {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "nameOfNotification"), object: nil)
-        
     }
     
     func  getUserDetails()
@@ -139,7 +148,7 @@ class MyAccountViewController: UIViewController,UITableViewDelegate,UITableViewD
             
             if success == false
             {
-                self.showAlert(message: result as! String )
+                self.showAlert(message: result as! String)
                 return
             }
             else
@@ -157,6 +166,7 @@ class MyAccountViewController: UIViewController,UITableViewDelegate,UITableViewD
                 UserDefaults.standard.set(User.usertype, forKey: "user_type")
                 UserDefaults.standard.set(User.phone, forKey: "user-phone")
                 UserDefaults.standard.set(User.usercompany, forKey: "company")
+                UserDefaults.standard.set(User.merchantType, forKey: "merchantType")
                 UserDefaults.standard.set(User.useraddress, forKey: "address")
                 UserDefaults.standard.set(User.userCity, forKey: "city")
                 UserDefaults.standard.set(User.gender, forKey: "gender")
@@ -164,17 +174,40 @@ class MyAccountViewController: UIViewController,UITableViewDelegate,UITableViewD
                 UserDefaults.standard.set(User.longtitude, forKey: "lng")
                 UserDefaults.standard.set(User.email, forKey: "email")
                 
-                
                 self.lblName.text = User.username!
                 let image =  String("\(WebServices.BASE_URL)\(String(describing: User.photouser ?? ""))")
                 self.imgProfile.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "userplaceholder"))
-                self.lblMerchantCompanyName.text = (User.usercompany ?? nil)
                 
+                self.lblMerchantCompanyName.text = nil
+                if User.usertype == MERCHANT
+                {
+                    if User.merchantType != "3"
+                    {
+                        self.lblMerchantCompanyName.text = User.usercompany ?? nil
+                    }
+                    else
+                    {
+                        self.lblMerchantCompanyName.text = nil
+                    }
+                }
             }
         }
     }
+    
+    @objc func back_Tapped() {
+        if userLoginType == BUYER {
+            let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController")
+            self.navigationController?.pushViewController(navigateToHome!, animated: false)
+        }else{
+            
+            let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "MerchantHomeViewController")
+            self.navigationController?.pushViewController(navigateToHome!, animated: false)
+//            self.navigationController?.popViewController(animated: true)
+        }
+    }
+   
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
 }

@@ -85,7 +85,7 @@ class PushNotificationsViewController: UIViewController,UITableViewDelegate,UITa
     }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -97,7 +97,7 @@ class PushNotificationsViewController: UIViewController,UITableViewDelegate,UITa
         cell.lblPushNotifications.text = String(describing:arrPushNotifications[indexPath.row])
         cell.btnPushNotifications.tag = indexPath.row
         cell.btnPushNotifications.addTarget(self, action: #selector(switchTriggered), for: UIControlEvents.valueChanged)
-        cell.btnPushNotifications.onTintColor = Constants.APP_COLOR
+        cell.btnPushNotifications.onTintColor = APP_COLOR
         let status = String(describing:arrPushNotificationsStatus[indexPath.row])
         
         print(status)

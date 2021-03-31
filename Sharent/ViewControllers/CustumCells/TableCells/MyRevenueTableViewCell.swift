@@ -13,6 +13,7 @@ class MyRevenueTableViewCell: UITableViewCell
 
     @IBOutlet weak var lblProductName:UILabel!
     @IBOutlet weak var imgProduct:UIImageView!
+    @IBOutlet weak var viewUnderimgProduct:UIView!
     @IBOutlet weak var lblProductDate:UILabel!
     @IBOutlet weak var lblProductUserName:UILabel!
     @IBOutlet weak var lblProductUserPaidPrice:UILabel!

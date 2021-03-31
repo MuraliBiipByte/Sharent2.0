@@ -13,7 +13,8 @@ class SuccessViewController: UIViewController
     
     var strTitle = String()
     var strMessage = String()
-    
+    var strFromCart = String()
+    var categoryid = String()
     var userLoginType = String()
 
     @IBOutlet weak var imageSuccess:UIImageView!
@@ -44,17 +45,28 @@ class SuccessViewController: UIViewController
     }
     @IBAction func btnBackToHomeTapped()
     {
+    
+        if strFromCart == "AddedToCart" {
+           
+            // navigation to related products
+            let navigateToRelated = self.storyboard?.instantiateViewController(withIdentifier: "RelatedItemsViewController") as! RelatedItemsViewController
+           navigateToRelated.category_id = categoryid
+            self.navigationController?.pushViewController(navigateToRelated, animated: false)
+            
+            
+        }else{
+            if userLoginType == BUYER
+            {
+                let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController")
+                self.navigationController?.pushViewController(navigateToHome!, animated: false)
+            }
+            else
+            {
+                let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "MerchantHomeViewController")
+                self.navigationController?.pushViewController(navigateToHome!, animated: false)
+            }
+        }
         
-        if userLoginType == UserType.BUYER
-        {
-            let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController")
-            self.navigationController?.pushViewController(navigateToHome!, animated: false)
-        }
-        else
-        {
-            let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "MerchantHomeViewController")
-            self.navigationController?.pushViewController(navigateToHome!, animated: false)
-        }
         
     }
 

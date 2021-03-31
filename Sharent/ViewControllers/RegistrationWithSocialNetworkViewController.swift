@@ -11,16 +11,13 @@ import ActionSheetPicker
 
 class RegistrationWithSocialNetworkViewController: UIViewController
 {
-    var userDataDictionary = [String:Any]()
     
     var paramsDic = [String:Any]()
     
     var userType = String()
     
     var url = String()
-    
     var strname,strEmail,strPhoto,strLoginType:String?
-    
     var arrCountryCodes:NSArray!
 
     
@@ -34,25 +31,9 @@ class RegistrationWithSocialNetworkViewController: UIViewController
     {
         super.viewDidLoad()
         
-        txttelcode.text = Constants.COUNTRY_CODE
+        txttelcode.text = COUNTRY_CODE
         txttelcode.isEnabled = false
         
-     //   userType = UserDefaults.standard.string(forKey: "user_type")!
-        
-        userDataDictionary = UserDefaults.standard.dictionary(forKey: "userDetails")!
-        strname = userDataDictionary["name"] as? String
-        strEmail = userDataDictionary["email"] as? String
-        strLoginType = userDataDictionary["login_type"] as? String
-        
-        
-        if let picture = userDataDictionary["picture"] as? NSDictionary
-        {
-            if let data = picture["data"] as? NSDictionary
-            {
-                strPhoto = data["url"] as? String
-                
-            }
-        }
         
         if strname != nil
         {
@@ -68,27 +49,27 @@ class RegistrationWithSocialNetworkViewController: UIViewController
     
     @IBAction func registrationTapped()
     {
+        self.view.endEditing(true)
+        
         if (txtphone.text?.isEmpty)!
         {
             self.showAlert(message:"Phone Number cannot be empty!")
             self.txtphone.resignFirstResponder()
             return
         }
+        paramsDic = ["api_key_data":WebServices.API_KEY,"name":strname!,"telcode":txttelcode.text!,"phone":txtphone.text!,"email":strEmail!,"user_type":userType,"device_type":DEVICE_TYPE]
         
-        if strLoginType == "gmail_user"
+        if strLoginType == GMAIL_USER
         {
-            paramsDic = ["api_key_data":WebServices.API_KEY,"name":strname!,"telcode":txttelcode.text!,"phone":txtphone.text!,"email":strEmail!,"user_type":userType]
             url = WebServices.REGISTER_ACCOUNT_GMAIL
         }
             
         else
         {
-            paramsDic = ["api_key_data":WebServices.API_KEY,"name":strname!,"telcode":txttelcode.text!,"phone":txtphone.text!,"email":strEmail!,"user_type":userType,"fb_image":strPhoto!]
-            
+            paramsDic["fb_image"] = strPhoto!
             url = WebServices.REGISTER_ACCOUNT_FACEBOOK
         }
         
-        self.view.endEditing(true)
         self.view.StartLoading()
         
         ApiManager().postRequest(service: url, params: paramsDic) { (result, success) in
@@ -112,7 +93,7 @@ class RegistrationWithSocialNetworkViewController: UIViewController
                 UserDefaults.standard.set(User.usertypeid, forKey: "user_type")
                 
                 
-                if User.mobileverify == "YES"
+                if User.emailverify == "YES"
                 {
                     
                     let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "LGSideMenu")
@@ -122,6 +103,7 @@ class RegistrationWithSocialNetworkViewController: UIViewController
                 {
                     let mobileVc = self.storyboard?.instantiateViewController(withIdentifier: "MobileVerificationViewController")as! MobileVerificationViewController
                     mobileVc.networkType = self.strLoginType!
+                    mobileVc.userLoginType = self.userType
                     self.present(mobileVc, animated: true, completion: nil)
                     
                 }
@@ -141,11 +123,11 @@ class RegistrationWithSocialNetworkViewController: UIViewController
     
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title:Constants.APP_NAME, Message:message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message:message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func showAlertWithAction(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:#selector(mobileVc), Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:#selector(mobileVc), Controller: self)], Controller: self)
     }
 
     @IBAction func btn_back_Tapped(_ sender: Any)

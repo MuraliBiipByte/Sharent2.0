@@ -50,6 +50,9 @@ final class Message
         
     }
     
+    
+    
+    
     class func AlertActionWithSelector(Title:NSString,Selector:Selector,Controller:UIViewController) -> UIAlertAction
     {
         let Action = UIAlertAction.init(title: Title as String, style: UIAlertActionStyle.default, handler: { (AlertAction:UIAlertAction) in

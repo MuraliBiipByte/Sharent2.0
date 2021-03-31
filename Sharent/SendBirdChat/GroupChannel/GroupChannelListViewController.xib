@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GroupChannelListViewController" customModule="Sharent" customModuleProvider="target">
+            <connections>
+                <outlet property="navItem" destination="WHs-8u-0BY" id="cFW-Pl-uaP"/>
+                <outlet property="noChannelLabel" destination="Yxg-DI-Qvx" id="cBx-Qs-zUl"/>
+                <outlet property="tableView" destination="Y7c-cx-0eA" id="Uzz-bX-SHy"/>
+                <outlet property="view" destination="xAt-g1-qZN" id="FmC-Ou-rHI"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="xAt-g1-qZN">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aIe-EP-JnX" customClass="CustomNavigationBar" customModule="Sharent" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="20" width="414" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="nPq-98-USL"/>
+                    </constraints>
+                    <color key="tintColor" red="0.50196078430000002" green="0.35294117650000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <items>
+                        <navigationItem title="Chat Support" id="WHs-8u-0BY"/>
+                    </items>
+                </navigationBar>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ky-w3-DM8">
+                    <rect key="frame" x="0.0" y="13" width="68" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="68" id="Ji7-WN-0XN"/>
+                        <constraint firstAttribute="height" constant="64" id="yw0-za-5fr"/>
+                    </constraints>
+                    <state key="normal" image="xibBack"/>
+                    <connections>
+                        <action selector="backVC:" destination="-1" eventType="touchUpInside" id="L6Z-Ey-9yd"/>
+                    </connections>
+                </button>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Y7c-cx-0eA">
+                    <rect key="frame" x="0.0" y="84" width="414" height="812"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="separatorColor" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <inset key="separatorInset" minX="92" minY="0.0" maxX="0.0" maxY="0.0"/>
+                </tableView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There's no channel." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yxg-DI-Qvx" userLabel="No Channel Label">
+                    <rect key="frame" x="128" y="437.5" width="158" height="21"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                    <color key="textColor" red="0.83529411760000005" green="0.83529411760000005" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="3ky-w3-DM8" firstAttribute="top" secondItem="xAt-g1-qZN" secondAttribute="top" constant="13" id="3V0-Dn-4Zi"/>
+                <constraint firstItem="aIe-EP-JnX" firstAttribute="top" secondItem="xAt-g1-qZN" secondAttribute="top" constant="20" id="7qY-RH-Eav"/>
+                <constraint firstItem="Y7c-cx-0eA" firstAttribute="top" secondItem="aIe-EP-JnX" secondAttribute="bottom" id="9Ap-Kf-0J7"/>
+                <constraint firstAttribute="trailing" secondItem="Y7c-cx-0eA" secondAttribute="trailing" id="Bqh-L5-9Nv"/>
+                <constraint firstItem="3ky-w3-DM8" firstAttribute="leading" secondItem="udx-gX-YES" secondAttribute="leading" id="ERd-Es-B0C"/>
+                <constraint firstItem="Y7c-cx-0eA" firstAttribute="leading" secondItem="xAt-g1-qZN" secondAttribute="leading" id="F88-g5-SI5"/>
+                <constraint firstItem="Yxg-DI-Qvx" firstAttribute="centerX" secondItem="xAt-g1-qZN" secondAttribute="centerX" id="J83-zs-Teo"/>
+                <constraint firstAttribute="bottom" secondItem="Y7c-cx-0eA" secondAttribute="bottom" id="dzI-GC-wrb"/>
+                <constraint firstItem="Yxg-DI-Qvx" firstAttribute="centerY" secondItem="xAt-g1-qZN" secondAttribute="centerY" id="egT-fQ-NI0"/>
+                <constraint firstItem="aIe-EP-JnX" firstAttribute="leading" secondItem="xAt-g1-qZN" secondAttribute="leading" id="opX-qw-dWq"/>
+                <constraint firstAttribute="trailing" secondItem="aIe-EP-JnX" secondAttribute="trailing" id="yjD-wZ-tHC"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="udx-gX-YES"/>
+            <point key="canvasLocation" x="43.478260869565219" y="58.928571428571423"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="xibBack" width="30" height="30"/>
+    </resources>
+</document>

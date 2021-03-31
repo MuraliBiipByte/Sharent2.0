@@ -11,31 +11,14 @@ import ActionSheetPicker
 
 class ForgotPasswordViewController: UIViewController,UITextFieldDelegate
 {
-    
-    @IBOutlet weak var txtCountryCode:UITextField!
-    @IBOutlet weak var txtPhoneNumber:UITextField!
-    
-    @IBOutlet weak var txtOtp:UITextField!
-    
-    @IBOutlet weak var viewPassword:UIView!
-    @IBOutlet weak var viewOtp: UIView!
-    @IBOutlet weak var txtPassword:UITextField!
-    @IBOutlet weak var txtConfirmPassword:UITextField!
-    
-    var arrCountryCodes:NSArray!
 
+    
+    @IBOutlet weak var emailText: UITextField!
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
-        txtCountryCode.text = Constants.COUNTRY_CODE
-        txtCountryCode.isEnabled = false
-        
-        viewOtp.isHidden = true
-        viewPassword.isHidden = true
-        txtOtp.delegate = self
-
-        
+ 
     }
 
     override func didReceiveMemoryWarning()
@@ -47,122 +30,82 @@ class ForgotPasswordViewController: UIViewController,UITextFieldDelegate
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
-        
-       
     }
-  @IBAction func btnSubmitTapped()
-    {
-        self.view.endEditing(true)
-        if (txtPhoneNumber.text?.isEmpty)!
-        {
-            self.showAlert(message: "Phone Enter Registered Mobile Number")
-            self.txtPhoneNumber.resignFirstResponder()
-            return
-        }
-        let paramsDic = ["api_key_data":WebServices.API_KEY,"telcode":txtCountryCode.text!,"phone":txtPhoneNumber.text!]
-        print("\(paramsDic)")
-        self.view.StartLoading()
-        ApiManager().postRequest(service:WebServices.FORGOTPASSWORD_ACCOUNT, params: paramsDic)
-        {
-            (result, success) in
-           self.view.StopLoading()
-            if success == false
-            {
-                self.showAlert(message: result as! String)
-                return
-            }
-            else
-            {
-                let response = result as! [String:AnyObject]
+    
+    
+    @IBAction func sendEmail_Tapped(_ sender: Any) {
+        
+        if self.emailText.text == "" {
+            self.showAlert(message: "Email should not be empty!")
+        }else{
+            print("call web service")
+            
+            let paramsDict = ["api_key_data":WebServices.API_KEY,"email": self.emailText.text!] as [String : Any]
+            print(paramsDict)
+            
+           self.view.StartLoading()
+            ApiManager().postRequest(service:WebServices.FORGOTPASSWORD_ACCOUNT, params: paramsDict )
+            { (result, success) in
+                self.view.StopLoading()
                 
-                print(result as! [String:AnyObject])
-                self.showAlert(message: response["message"] as! String)
-                self.viewOtp.isHidden = false
-                return
+                if success == false
+                {
+                    self.showAlert(message: result as! String)
+                    return
+                }
+                else
+                {
+                    let response = result as! [String:AnyObject]
+                    self.forgototpVC()
+                    self.showAlert(message: response["message"] as! String)
+                    return
+                }
             }
+           
+            
+            
         }
     }
     
- 
-    @IBAction func btnVerifyOtpSubmitTapped()
-    {
-        self.view.endEditing(true)
-        if (txtOtp.text?.isEmpty)!
-        {
-            self.showAlert(message: "Otp cannot be empty!")
-            self.txtPhoneNumber.resignFirstResponder()
-            return
-        }
-        let paramsDic = ["api_key_data":WebServices.API_KEY,"telcode":txtCountryCode.text!,"phone":txtPhoneNumber.text!,"forgotten_password_code":txtOtp.text!]
-        print("\(paramsDic)")
-        self.view.StartLoading()
-        ApiManager().postRequest(service:WebServices.FORGOTPASSWORD_VERIFY_OTP, params: paramsDic)
-        {
-            (result, success) in
-            self.view.StopLoading()
-            if success == false
-            {
-                self.showAlert(message: result as! String)
-                return
-            }
-            else
-            {
-                let resultDictionary = result as! [String : Any]
-                let message = resultDictionary["message"] as? String
-                self.viewPassword.isHidden = false
-                
-                self.showAlert(message: message!)
-                
-            }
-        }
-    }
-
-
-    @IBAction func btnResend_Tapped(_ sender: Any) {
-        btnSubmitTapped()
-        
-    }
-    @IBAction func btnSubmitPassword()
- {
-    if (txtPassword.text?.isEmpty)!
-    {
-        self.showAlert(message:"Password cannot be empty!")
-        self.txtPhoneNumber.resignFirstResponder()
-        return
-    }
-    if (txtConfirmPassword.text?.isEmpty)!
-    {
-        self.showAlert(message:"ConfirmPassword cannot be empty!")
-        self.txtPhoneNumber.resignFirstResponder()
-        return
-    }
-    if (!(txtPassword.text == txtConfirmPassword.text))
-    {
-        self.showAlert(message: "Password and Confirm Password are not matching")
-        self.txtPhoneNumber.resignFirstResponder()
-        return
-    }
-    let paramsDic = ["api_key_data":WebServices.API_KEY,"telcode":txtCountryCode.text!,"phone":txtPhoneNumber.text!,"password":txtPassword.text!,"passconf":txtConfirmPassword.text!]
-    print("\(paramsDic)")
-    self.view.StartLoading()
-    ApiManager().postRequest(service:WebServices.RESET_PASWORD, params: paramsDic)
-    {
-        (result, success) in
-        self.view.StopLoading()
-        if success == false
-        {
-            self.showAlert(message: result as! String)
-            return
-        }
-        else
-        {
-            let resultDictionary = result as! [String : Any]
-            let message = resultDictionary["message"] as? String
-            self.txtPhoneNumber.isEnabled = false
-            self.showAlertWithAction(message: message!, selector:#selector(self.LoginVC))
-        }
-    }
- }
+    
+    
+    
+    
+    
+    
+//  @IBAction func btnSubmitTapped()
+//    {
+//        self.view.endEditing(true)
+//        if (txtEmail.text?.isEmpty)!
+//        {
+//            self.showAlert(message: "Email should not be empty")
+//            self.txtEmail.resignFirstResponder()
+//            return
+//        }
+//
+//        let paramsDic = ["api_key_data":WebServices.API_KEY,"email ":txtEmail.text!]
+//
+//        print("\(paramsDic)")
+//        self.view.StartLoading()
+//    ApiManager().postRequest(service:WebServices.FORGOTPASSWORD_ACCOUNT, params: paramsDic)
+//        {
+//            (result, success) in
+//           self.view.StopLoading()
+//            if success == false
+//            {
+//                self.showAlert(message: result as! String)
+//                return
+//            }
+//            else
+//            {
+//                let response = result as! [String:AnyObject]
+//                self.forgototpVC()
+//                self.showAlert(message: response["message"] as! String)
+//                return
+//            }
+//        }
+//    }
+  
     @IBAction func btm_back_Tapped(_ sender: Any)
     {
         self.dismiss(animated: true, completion: nil)
@@ -170,15 +113,15 @@ class ForgotPasswordViewController: UIViewController,UITextFieldDelegate
     }
     func showAlert(message:String)
     {
-       Message.shared.Alert(Title:Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+       Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
-    func showAlertWithAction(message:String,selector:Selector)
+    
+    @objc func forgototpVC()
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:#selector(LoginVC), Controller: self)], Controller: self)
+        let forgot = self.storyboard?.instantiateViewController(withIdentifier: "ForgotPswdOTPViewController") as! ForgotPswdOTPViewController
+//        forgot.telecode = txtCountryCode.text!
+        forgot.emailReference = emailText.text!
+        self.present(forgot, animated: true, completion: nil)
     }
-    @objc func LoginVC()
-    {
-        let login = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-        self.present(login, animated: true, completion: nil)
-    }
+    
 }

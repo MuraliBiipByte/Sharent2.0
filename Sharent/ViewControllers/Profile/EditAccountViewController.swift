@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SkyFloatingLabelTextField
 import GooglePlaces
 import GooglePlacePicker
 import GoogleMaps
@@ -15,56 +14,63 @@ import ActionSheetPicker
 
 class EditAccountViewController: UIViewController,GMSAutocompleteViewControllerDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate , UITextFieldDelegate
 {
-
+    
     @IBOutlet weak var imgProfile: UIImageView!
     @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var txtName: UITextField!
     @IBOutlet weak var txtMobileNumber: UITextField!
     @IBOutlet weak var txtEmail: UITextField!
-    @IBOutlet weak var btnAddress: UIButton!
-    @IBOutlet weak var lblAddress: UILabel!
+//    @IBOutlet weak var btnAddress: UIButton!
+//    @IBOutlet weak var lblAddress: UILabel!
+    
+    @IBOutlet weak var lblAddress: UITextField!
+    
+    
     @IBOutlet weak var btnSave: UIButton!
     @IBOutlet weak var btnEditImage: UIButton!
     var placesClient: GMSPlacesClient!
     let arrGender = ["Male","Female","Others"]
-
+    
     var strUserId = String()
     var strUserType = String()
-    var strImage = String()
     var address = String()
     var city = String()
     var lat = String()
     var long = String()
     var genderText = String()
     let imagePicker = UIImagePickerController()
-
+    
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
-          self.imagePicker.delegate = self
-          self.txtName.delegate = self
-          imgProfile.layer.cornerRadius = imgProfile.frame.height / 2;
-            imagePicker.delegate = self
+        self.imagePicker.delegate = self
+        self.txtName.delegate = self
+         self.lblAddress.delegate = self
+        imgProfile.layer.cornerRadius = imgProfile.frame.height / 2;
+        imagePicker.delegate = self
         
         profileImage.layer.cornerRadius = profileImage.frame.width/2
         profileImage.layer.masksToBounds = true
+        profileImage.layer.borderWidth = 0.2
+        profileImage.layer.borderColor = NAVIGATION_COLOR.cgColor
         
-       strUserId = UserDefaults.standard.value(forKey: "user_id")! as! String
-       strUserType = UserDefaults.standard.value(forKey: "user_type")! as! String
- 
-      
+        strUserId = UserDefaults.standard.value(forKey: "user_id")! as! String
+        strUserType = UserDefaults.standard.value(forKey: "user_type")! as! String
+        
+        
         let image = String("\(WebServices.BASE_URL)\(User.photouser ?? "")")
-       self.imgProfile.sd_setImage(with: URL(string:image), placeholderImage: UIImage(named: "userplaceholder"))
+        self.imgProfile.sd_setImage(with: URL(string:image), placeholderImage: UIImage(named: "userplaceholder"))
         
         self.txtName.text = User.username!
+          self.lblAddress.text = User.useraddress!
         self.txtMobileNumber.text = User.phone!
         self.txtMobileNumber.isEnabled = false
         
         self.txtEmail.text = User.email
         self.txtEmail.isEnabled = false
-        self.lblAddress.text = "\((User.useraddress == nil) ? "Select Address" : "\(User.useraddress!)")"
+        self.lblAddress.placeholder = "\((User.useraddress == nil) ? "Select Address" : "\(User.useraddress!)")"
         lat = User.latitude ?? ""
         long = User.longtitude ?? ""
         
@@ -73,7 +79,7 @@ class EditAccountViewController: UIViewController,GMSAutocompleteViewControllerD
     @IBAction func btn_Photo_Tapped(_ sender: Any)
     {
         
-        let alert = UIAlertController(title: Constants.APP_NAME, message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title:APP_NAME, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { _ in
             self.openCamera()
         }))
@@ -84,7 +90,7 @@ class EditAccountViewController: UIViewController,GMSAutocompleteViewControllerD
         
         alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
- }
+    }
     func openCamera()
     {
         if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerControllerSourceType.camera))
@@ -113,15 +119,16 @@ class EditAccountViewController: UIViewController,GMSAutocompleteViewControllerD
         imagePicker.allowsEditing = true
         self.present(imagePicker, animated: true, completion: nil)
     }
-    @IBAction func btn_Address_Tapped(_ sender: Any) {
-        let autocompleteController = GMSAutocompleteViewController()
-        let filter = GMSAutocompleteFilter()
-        filter.country = "SG"
-        autocompleteController.autocompleteFilter = filter
-        autocompleteController.delegate = self 
-        present(autocompleteController, animated: true, completion: nil)
-    }
-  
+//    @IBAction func btn_Address_Tapped(_ sender: Any)
+//    {
+//        let autocompleteController = GMSAutocompleteViewController()
+//        let filter = GMSAutocompleteFilter()
+//        filter.country = "SG"
+//        autocompleteController.autocompleteFilter = filter
+//        autocompleteController.delegate = self
+//        present(autocompleteController, animated: true, completion: nil)
+//    }
+//
     @IBAction func btn_Save_Tapped(_ sender: Any)
     {
         if (self.txtName.text?.isEmpty)!
@@ -129,33 +136,28 @@ class EditAccountViewController: UIViewController,GMSAutocompleteViewControllerD
             self.showAlert(message: "Name Should not be empty")
             return
         }
-       
+        
+        
         var paramsDic = [String : String]()
-     
+        
         paramsDic = ["api_key_data":WebServices.API_KEY,"user_type":strUserType,"user_id":strUserId,"username":self.txtName.text!,"address":self.lblAddress.text!,"city":"Singpore","lat":lat,"long":long]
+       
         
-        print(paramsDic)
-        
-        let urlString = WebServices.BASE_URL_SERVICE + WebServices.BUYER_EDIT_PROFILE
+        let urlString = WebServices.BUYER_EDIT_PROFILE
         self.view.StartLoading()
-        ApiManager().editProfileSendRequest(urlString, image: self.profileImage.image!, parameters: paramsDic)
-        { (response, Success) in
+        ApiManager().editProfileSendRequest(service: urlString, image: self.profileImage.image!, params: paramsDic)
+        { (result, success) in
             self.view.StopLoading()
             
-            if Success == false
+            if success == false
             {
-                let responseData = response as! [String:Any]
-                let resp = responseData["response"] as! [String:Any]
-                let mess = resp["message"] as! String
-                self.showAlert(message: mess)
+                self.showAlert(message: result as! String)
                 return
             }
             else
             {
-                print(response)
-                let responseData = response as! [String:Any]
-                let resp = responseData["response"] as! [String:Any]
-                let dataDictionary = resp["data"] as? [String:Any]
+                let responseData = result as! [String:Any]
+                let dataDictionary = responseData["data"] as? [String:Any]
                 let userDataDictionary = dataDictionary?["userdata"] as? [String : Any]
                 _ = User(userDictionay: userDataDictionary!)
                 
@@ -171,9 +173,9 @@ class EditAccountViewController: UIViewController,GMSAutocompleteViewControllerD
                 UserDefaults.standard.set(User.latitude, forKey: "lat")
                 UserDefaults.standard.set(User.longtitude, forKey: "lng")
                 UserDefaults.standard.set(User.email, forKey: "email")
-
-                let mess = resp["message"] as! String
-                let status  = resp["status"] as! String
+                
+                let mess = responseData["message"] as! String
+                let status  = responseData["status"] as! String
                 if status == "1"
                 {
                     self.showAlertWithAction(message:mess)
@@ -184,28 +186,26 @@ class EditAccountViewController: UIViewController,GMSAutocompleteViewControllerD
                     self.showAlertWithAction(message:mess)
                     self.viewWillAppear(true)
                 }
-               
-                
+          
             }
         }
-  }
-    @IBAction func btn_back_Tapped(_ sender: Any) {
+    }
+    @IBAction func btn_back_Tapped(_ sender: Any)
+    {
         
         self.navigationController?.popViewController(animated: true)
-    
+        
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
     {
-       self.imgProfile.image = nil
+        self.imgProfile.image = nil
         
-       if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-           //self.imgProfile.contentMode = .scaleAspectFit
-        
-           self.imgProfile.image = pickedImage
-           let imageData = UIImagePNGRepresentation(pickedImage)! as NSData
-            let strBase64:String = imageData.base64EncodedString(options: .lineLength64Characters)
-            self.strImage = strBase64
-        
+        if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage
+        {
+            //self.imgProfile.contentMode = .scaleAspectFit
+            
+            self.imgProfile.image = pickedImage
+//              UserDefaults.standard.set(self.imgProfile.image, forKey: "userImage")
         }
         
         dismiss(animated: true, completion: nil)
@@ -223,11 +223,11 @@ class EditAccountViewController: UIViewController,GMSAutocompleteViewControllerD
     }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func showAlertWithAction(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:#selector(myAccount), Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:#selector(myAccount), Controller: self)], Controller: self)
     }
     @objc func myAccount()
     {
@@ -237,9 +237,8 @@ class EditAccountViewController: UIViewController,GMSAutocompleteViewControllerD
     {
         
         self.lblAddress.text = "\(place.name),\(place.formattedAddress!)"
-        
-        print("\(place.name)")
        
+        
         User.latitude =  "\(place.coordinate.latitude)"
         lat = "\(place.coordinate.latitude)"
         User.longtitude = "\(place.coordinate.longitude)"

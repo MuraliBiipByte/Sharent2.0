@@ -22,7 +22,7 @@ class PreAuthorizationViewController: UIViewController
         
         self.title = "Summary"
         
-        lblPreauthPercentage.text = "A $\(ProductInformation.productFeePercentage!) pre-authorization hold will be imposed untill the rented item safety returned to the Merchant with no damage."
+        lblPreauthPercentage.text = "A pre-authorisation fee of $\(ProductInformation.productFeePercentage!) will be held in your bank account until the rented item is safely returned to the Merchant in good condition"
 
     }
     
@@ -59,6 +59,13 @@ class PreAuthorizationViewController: UIViewController
         privacyVc.title = "Terms & Conditions"
         self.navigationController?.pushViewController(privacyVc, animated: true)
     }
+    @IBAction func btn_FAQ_Tapped()
+    {
+        let privacyVc = self.storyboard?.instantiateViewController(withIdentifier: "PrivacyPolicyViewController") as! PrivacyPolicyViewController
+        privacyVc.urlIndex = 3
+        privacyVc.title = "FAQ"
+        self.navigationController?.pushViewController(privacyVc, animated: true)
+    }
     @IBAction func btn_Back_Tapped(_ sender: Any)
     {
         self.navigationController?.popViewController(animated: false)
@@ -66,6 +73,6 @@ class PreAuthorizationViewController: UIViewController
     
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
 }

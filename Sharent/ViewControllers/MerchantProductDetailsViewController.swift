@@ -7,15 +7,16 @@
 //
 
 import UIKit
+import ImageSlideshow
 
-class MerchantProductDetailsViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate
+class MerchantProductDetailsViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
 {
-   
+    
     var strProductId = String()
     var strUserId = String()
     var userName = String()
     var userImage :String? = ""
-   
+    
     var ProductDetails = [String:Any]()
     var bookingHistoryDetails = [AnyObject]()
     
@@ -28,8 +29,9 @@ class MerchantProductDetailsViewController: UIViewController,UITableViewDelegate
     
     @IBOutlet weak var tableviewBookingDetails:UITableView!
     
-    @IBOutlet weak var collectionViewProductImages:UICollectionView!
-    @IBOutlet weak var pageControl:UIPageControl!
+    @IBOutlet var bannersSlideshow: ImageSlideshow!
+    @IBOutlet weak var viewProductImages: NSLayoutConstraint!
+    
     
     @IBOutlet weak var imgProfileMerchant:UIImageView!
     @IBOutlet weak var lblMerchantName:UILabel!
@@ -54,29 +56,45 @@ class MerchantProductDetailsViewController: UIViewController,UITableViewDelegate
         imgProfileMerchant?.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "userplaceholder"))
         imgProfileMerchant.layer.cornerRadius = imgProfileMerchant.frame.size.height/2
         imgProfileMerchant.layer.masksToBounds = true
+        imgProfileMerchant.layer.borderWidth = 0.2
+        imgProfileMerchant.layer.borderColor = NAVIGATION_COLOR.cgColor
         
         tableviewBookingDetails.delegate = self
         tableviewBookingDetails.dataSource = self
-        
-        collectionViewProductImages.delegate = self
-        collectionViewProductImages.dataSource = self
         
         tableviewBookingDetailsHeight.constant = 0.0
         tableviewBookingDetailsHeight.isActive = true
         tableviewBookingDetails.isHidden = true
         
         lblBookingCalender.isHidden = true
+        
         getProductDetails()
         
+        let screenSize: CGRect = UIScreen.main.bounds
+        
+        let screenWidth = screenSize.width
+        
+        viewProductImages.constant = screenWidth - 32
+        viewProductImages.isActive = true
+        
+        
+        
     }
-
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        
+        
+    }
+    
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
         
     }
     
-
+    
     func getProductDetails()
     {
         self.scrollView.isHidden = true
@@ -95,13 +113,13 @@ class MerchantProductDetailsViewController: UIViewController,UITableViewDelegate
             }
             else
             {
-               self.scrollView.isHidden = false
+                self.scrollView.isHidden = false
                 
                 let response = result as! [String : Any]
                 let dataDictionary = response ["data"]as! [String:Any]
                 self.ProductDetails = dataDictionary["products"] as! [String : Any]
                 self.bookingHistoryDetails = dataDictionary["booked_history"] as! [AnyObject]
-        
+               
                 if self.bookingHistoryDetails.count > 0
                 {
                     self.lblBookingCalender.isHidden = false
@@ -147,21 +165,29 @@ class MerchantProductDetailsViewController: UIViewController,UITableViewDelegate
                 }
                 if self.arrProductImages.count > 0
                 {
-                    self.collectionViewProductImages.reloadData()
                     self.configurePageControl()
                 }
-                    
+                
             }
         }
     }
+    
+    
     func configurePageControl()
     {
-        
-        self.pageControl.numberOfPages = self.arrProductImages.count
-        self.pageControl.currentPage = 0
-        self.pageControl.pageIndicatorTintColor = UIColor.lightGray
-        self.pageControl.currentPageIndicatorTintColor = Constants.NAVIGATION_COLOR
-        self.pageControl.isEnabled = false
+        var sdWebImageSource = [SDWebImageSource]()
+        for index in 0..<self.arrProductImages.count
+        {
+            let image =  self.arrProductImages[index]
+            sdWebImageSource.append(SDWebImageSource.init(url: URL(string: image)!, placeholder:UIImage(named: "productPlaceholder")))
+        }
+        let pageControl = UIPageControl()
+        pageControl.currentPageIndicatorTintColor = NAVIGATION_COLOR
+        pageControl.pageIndicatorTintColor = APP_COLOR
+        pageControl.isEnabled = false
+        self.bannersSlideshow.pageIndicator = pageControl
+        self.bannersSlideshow.contentScaleMode = UIView.ContentMode.scaleAspectFill
+        self.bannersSlideshow.setImageInputs(sdWebImageSource)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -174,38 +200,20 @@ class MerchantProductDetailsViewController: UIViewController,UITableViewDelegate
         let cell = tableView.dequeueReusableCell(withIdentifier: "BookingDatesTableViewCell") as! BookingDatesTableViewCell
         let bookedUsername = self.bookingHistoryDetails[indexPath.row]["user_name"] as! String
         let bookedFromDate = self.bookingHistoryDetails[indexPath.row]["rental_period_startdate"] as! String
+        
         let bookedToDate = self.bookingHistoryDetails[indexPath.row]["rental_period_enddate"] as! String
         let userdetailswithdates = String(format: " %@ : %@ to %@",bookedUsername,bookedFromDate,bookedToDate)
         
         cell.lblUserdetailswithDates.text = userdetailswithdates
-      
+        
         return cell
         
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         let bookingDetails = self.storyboard?.instantiateViewController(withIdentifier: "BookedProductDetailsViewController") as! BookedProductDetailsViewController
-        bookingDetails.referenceProductId = self.arrReferenceIds[indexPath.row] as! String
+        bookingDetails.OrderId = self.arrReferenceIds[indexPath.row] as! String
         self.navigationController?.pushViewController(bookingDetails, animated: true)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
-    {
-        return arrProductImages.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
-            "ProductsCollectionViewCell", for: indexPath) as! ProductsCollectionViewCell
-        let image =  "\(self.arrProductImages[indexPath.row] )"
-        cell.imgProduct.sd_setImage(with: URL(string: image), placeholderImage: #imageLiteral(resourceName: "productPlaceholder"))
-        return cell
-    }
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
-    {
-        let pageNumber = round(scrollView.contentOffset.x / scrollView.frame.size.width)
-        pageControl.currentPage = Int(pageNumber)
     }
     
     @IBAction func btn_SeeReviews_Tapped(_ sender: Any)
@@ -224,6 +232,6 @@ class MerchantProductDetailsViewController: UIViewController,UITableViewDelegate
     }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
 }

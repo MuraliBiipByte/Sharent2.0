@@ -12,7 +12,7 @@ class ConfirmOrderViewController: UIViewController,UITextViewDelegate
 {
     var userId = String()
     var userLoginType = String()
-    var referenceProductId = String()
+    var orderId = String()
     var productUserId = String()
     var merchantId = String()
     
@@ -30,7 +30,7 @@ class ConfirmOrderViewController: UIViewController,UITextViewDelegate
     {
         super.viewDidLoad()
         
-        self.title = "Confirm Order"
+        self.title = "CONFIRM ORDER"
         
         
         userId = UserDefaults.standard.value(forKey: "user_id") as! String
@@ -38,7 +38,7 @@ class ConfirmOrderViewController: UIViewController,UITextViewDelegate
         
         txtViewMessage.text = " Further comments on condition of the item."
         txtViewMessage.textColor = UIColor.lightGray
-   
+        
     }
     
     override func didReceiveMemoryWarning()
@@ -58,7 +58,7 @@ class ConfirmOrderViewController: UIViewController,UITextViewDelegate
         }
         else
         {
-            let otherAlert = UIAlertController(title:Constants.APP_NAME, message: "Did you receive product in bad condition?", preferredStyle: UIAlertControllerStyle.alert)
+            let otherAlert = UIAlertController(title:APP_NAME, message: "Did you receive product in bad condition?", preferredStyle: UIAlertControllerStyle.alert)
             
             let okAction = UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler:
             {(alert: UIAlertAction!) in
@@ -75,7 +75,7 @@ class ConfirmOrderViewController: UIViewController,UITextViewDelegate
             otherAlert.addAction(deleteAction)
             present(otherAlert, animated: true, completion: nil)
         }
-
+        
     }
     
     @objc func updateConfirmOrder(productConditon:String)
@@ -86,9 +86,9 @@ class ConfirmOrderViewController: UIViewController,UITextViewDelegate
             self.txtViewMessage.resignFirstResponder()
             return
         }
-        paramsdic = ["api_key_data":WebServices.API_KEY,"message":txtViewMessage.text!,"user_type":userLoginType,"reference_id":referenceProductId,"good_condition":productConditon]
+        paramsdic = ["api_key_data":WebServices.API_KEY,"message":txtViewMessage.text!,"user_type":userLoginType,"order_id":orderId,"good_condition":productConditon]
         
-        if userLoginType == UserType.BUYER
+        if userLoginType == BUYER
         {
             urlService = WebServices.BUYER_CONFIRM_ORDER
             paramsdic["user_id"] = userId
@@ -143,15 +143,15 @@ class ConfirmOrderViewController: UIViewController,UITextViewDelegate
     @objc func homeVc()
     {
         
-        if  userLoginType==UserType.BUYER
+        if  userLoginType == BUYER
         {
             let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController")
             self.navigationController?.pushViewController(navigateToHome!, animated: false)
         }
         else
         {
-            let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "MerchantHomeViewController")
-            self.navigationController?.pushViewController(navigateToHome!, animated: false)
+            self.navigationController?.popViewController(animated: true)
+            
         }
         
     }
@@ -193,11 +193,11 @@ class ConfirmOrderViewController: UIViewController,UITextViewDelegate
     
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
     
 }

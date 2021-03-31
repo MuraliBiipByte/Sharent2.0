@@ -12,10 +12,11 @@ class CardListTableViewCell: UITableViewCell
 {
 
     @IBOutlet weak var cardlistDisplayView: UIView!
-    
     @IBOutlet weak var lblCardNumber: UILabel!
-    
     @IBOutlet weak var cardImage: UIImageView!
+    
+    @IBOutlet weak var cardDeleteBtn: UIButton!
+    
     
     override func awakeFromNib()
     {

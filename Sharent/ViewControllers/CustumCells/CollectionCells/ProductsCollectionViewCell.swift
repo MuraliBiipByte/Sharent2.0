@@ -23,13 +23,13 @@ class ProductsCollectionViewCell: UICollectionViewCell
     //category cell
     @IBOutlet weak var lblCategoryName: UILabel!
     
-    //Related Products Cell
-    @IBOutlet weak var imgRelatedProduct: UIImageView!
-    @IBOutlet weak var lblRelatedProductName: UILabel!
-    @IBOutlet weak var lblRelatedProductRate: UILabel!
-    @IBOutlet weak var lblRelatedProductRatings: UILabel!
     
-    @IBOutlet weak var viewRelatedRating: FloatRatingView!
+    //Related review Cell
+    @IBOutlet weak var reviewRelatedImg: UIImageView!
+    @IBOutlet weak var review_userName: UILabel!
+    @IBOutlet weak var comment: UILabel!
+    @IBOutlet weak var reviewRating: FloatRatingView!
+    @IBOutlet weak var commentedTime: UILabel!
     
     //Fav Products CollectionView
     
@@ -41,5 +41,13 @@ class ProductsCollectionViewCell: UICollectionViewCell
     @IBOutlet weak var imgFav: UIImageView!
     
     @IBOutlet weak var FavBackGroung: FloatRatingView!
+    
+    // Hot items collection
+//    
+//    @IBOutlet weak var itemImage: UIImageView!
+//    
+//    @IBOutlet weak var itemName: UILabel!
+//    @IBOutlet weak var itemRate: UILabel!
+    
     
 }

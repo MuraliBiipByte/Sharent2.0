@@ -64,8 +64,9 @@ arrSettings = ["Push Notification","Email Notification"]
     }
     
     @IBAction func btn_Menu_Tapped(_ sender: Any) {
-        UIView.animate(withDuration: 0.4, animations:{
-            self.sideMenuController?.leftViewWidth = 280
+        UIView.animate(withDuration: 0.4, animations:
+            {
+            self.sideMenuController?.leftViewWidth = self.view.frame.width - 100
             self.sideMenuController?.showLeftView(animated:true, completionHandler :nil)
         })
     }

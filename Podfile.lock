@@ -1,12 +1,18 @@
 PODS:
   - ActionSheetPicker (1.6.2)
   - Alamofire (4.7.3)
+  - AlamofireImage (3.4.1):
+    - Alamofire (~> 4.7)
   - Bolts (1.9.0):
     - Bolts/AppLinks (= 1.9.0)
     - Bolts/Tasks (= 1.9.0)
   - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.9.0)
+  - CCBottomRefreshControl (0.5.2)
+  - Crashlytics (3.10.7):
+    - Fabric (~> 1.7.11)
+  - Fabric (1.7.11)
   - FacebookCore (0.3.2):
     - Bolts (~> 1.8)
     - FBSDKCoreKit (~> 4.35)
@@ -19,11 +25,19 @@ PODS:
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.35.0):
     - FBSDKCoreKit
+  - Firebase/Analytics (5.6.0):
+    - Firebase/Core
+  - Firebase/Auth (5.6.0):
+    - Firebase/CoreOnly
+    - FirebaseAuth (= 5.0.3)
   - Firebase/Core (5.6.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 5.1.1)
   - Firebase/CoreOnly (5.6.0):
     - FirebaseCore (= 5.1.1)
+  - Firebase/DynamicLinks (5.6.0):
+    - Firebase/Core
+    - FirebaseDynamicLinks (= 3.0.2)
   - Firebase/Messaging (5.6.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (= 3.1.0)
@@ -36,8 +50,16 @@ PODS:
     - GoogleUtilities/Network (~> 5.2)
     - "GoogleUtilities/NSData+zlib (~> 5.2)"
     - nanopb (~> 0.3)
+  - FirebaseAuth (5.0.3):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 5.0)
+    - GoogleUtilities/Environment (~> 5.2)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - FirebaseAuthInterop (1.0.0)
   - FirebaseCore (5.1.1):
     - GoogleUtilities/Logger (~> 5.2)
+  - FirebaseDynamicLinks (3.0.2):
+    - FirebaseAnalytics (~> 5.1)
   - FirebaseInstanceID (3.2.1):
     - FirebaseCore (~> 5.1)
     - GoogleUtilities/Environment (~> 5.2)
@@ -46,6 +68,7 @@ PODS:
     - FirebaseInstanceID (~> 3.0)
     - GoogleUtilities/Reachability (~> 5.2)
     - Protobuf (~> 3.1)
+  - FLAnimatedImage (1.0.12)
   - GoogleAppMeasurement (5.1.1):
     - GoogleUtilities/AppDelegateSwizzler (~> 5.2.0)
     - GoogleUtilities/MethodSwizzler (~> 5.2.0)
@@ -98,51 +121,131 @@ PODS:
   - GTMSessionFetcher/Core (1.2.0)
   - GTMSessionFetcher/Full (1.2.0):
     - GTMSessionFetcher/Core (= 1.2.0)
-  - ImagePicker (3.1.0)
+  - HTMLKit (2.1.5)
+  - ImageSlideshow (1.6.1):
+    - ImageSlideshow/Core (= 1.6.1)
+  - ImageSlideshow/Core (1.6.1)
+  - ImageSlideshow/SDWebImage (1.6.1):
+    - ImageSlideshow/Core
+    - SDWebImage (< 5.0, >= 3.7)
   - LGSideMenuController (2.1.1)
+  - MaterialComponents/AnimationTiming (85.7.0)
+  - MaterialComponents/Chips (85.7.0):
+    - MaterialComponents/Ink
+    - MaterialComponents/private/Math
+    - MaterialComponents/Ripple
+    - MaterialComponents/ShadowElevations
+    - MaterialComponents/ShadowLayer
+    - MaterialComponents/ShapeLibrary
+    - MaterialComponents/Shapes
+    - MaterialComponents/TextFields
+    - MaterialComponents/Typography
+    - MDFInternationalization
+  - MaterialComponents/Ink (85.7.0):
+    - MaterialComponents/private/Math
+  - MaterialComponents/Palettes (85.7.0)
+  - MaterialComponents/private/Application (85.7.0)
+  - MaterialComponents/private/Math (85.7.0)
+  - MaterialComponents/Ripple (85.7.0):
+    - MaterialComponents/AnimationTiming
+    - MaterialComponents/private/Math
+  - MaterialComponents/ShadowElevations (85.7.0)
+  - MaterialComponents/ShadowLayer (85.7.0):
+    - MaterialComponents/ShadowElevations
+  - MaterialComponents/ShapeLibrary (85.7.0):
+    - MaterialComponents/private/Math
+    - MaterialComponents/Shapes
+  - MaterialComponents/Shapes (85.7.0):
+    - MaterialComponents/private/Math
+    - MaterialComponents/ShadowLayer
+  - MaterialComponents/TextFields (85.7.0):
+    - MaterialComponents/AnimationTiming
+    - MaterialComponents/Palettes
+    - MaterialComponents/private/Math
+    - MaterialComponents/Typography
+    - MDFInternationalization
+  - MaterialComponents/Typography (85.7.0):
+    - MaterialComponents/private/Application
+    - MaterialComponents/private/Math
+  - MDFInternationalization (2.0.0)
+  - MGSwipeTableCell (1.6.8)
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
+  - NYTPhotoViewer (1.1.0):
+    - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
+    - NYTPhotoViewer/Core (= 1.1.0)
+  - NYTPhotoViewer/AnimatedGifSupport (1.1.0):
+    - FLAnimatedImage (~> 1.0.8)
+    - NYTPhotoViewer/Core
+  - NYTPhotoViewer/Core (1.1.0)
   - Protobuf (3.6.1)
+  - RSKImageCropper (2.2.2)
   - SDWebImage (3.7.1):
     - SDWebImage/Core (= 3.7.1)
   - SDWebImage/Core (3.7.1)
-  - SkyFloatingLabelTextField (3.5.1)
+  - SendBirdSDK (3.0.145)
   - Stripe (13.2.0)
+  - TTTAttributedLabel (2.0.0)
+  - "UITextView+Placeholder (1.2.1)"
 
 DEPENDENCIES:
   - ActionSheetPicker
   - Alamofire
+  - AlamofireImage
+  - CCBottomRefreshControl
+  - Crashlytics
+  - Fabric
   - FacebookCore
   - FacebookLogin
+  - Firebase/Analytics
+  - Firebase/Auth
   - Firebase/Core
+  - Firebase/DynamicLinks
   - Firebase/Messaging
+  - FLAnimatedImage (~> 1.0)
   - GoogleMaps
   - GooglePlacePicker
   - GooglePlaces
   - GoogleSignIn
-  - ImagePicker
+  - HTMLKit (~> 2.0)
+  - ImageSlideshow
+  - ImageSlideshow/SDWebImage
   - LGSideMenuController
+  - MaterialComponents/Chips
+  - MGSwipeTableCell
+  - NYTPhotoViewer (~> 1.1.0)
+  - RSKImageCropper
   - SDWebImage
-  - SkyFloatingLabelTextField
+  - SendBirdSDK (~> 3.0)
   - Stripe
+  - TTTAttributedLabel
+  - "UITextView+Placeholder"
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - ActionSheetPicker
     - Alamofire
+    - AlamofireImage
     - Bolts
+    - CCBottomRefreshControl
+    - Crashlytics
+    - Fabric
     - FacebookCore
     - FacebookLogin
     - FBSDKCoreKit
     - FBSDKLoginKit
     - Firebase
     - FirebaseAnalytics
+    - FirebaseAuth
+    - FirebaseAuthInterop
     - FirebaseCore
+    - FirebaseDynamicLinks
     - FirebaseInstanceID
     - FirebaseMessaging
+    - FLAnimatedImage
     - GoogleAppMeasurement
     - GoogleMaps
     - GooglePlacePicker
@@ -152,27 +255,43 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMOAuth2
     - GTMSessionFetcher
-    - ImagePicker
+    - HTMLKit
+    - ImageSlideshow
     - LGSideMenuController
+    - MaterialComponents
+    - MDFInternationalization
+    - MGSwipeTableCell
     - nanopb
+    - NYTPhotoViewer
     - Protobuf
+    - RSKImageCropper
     - SDWebImage
-    - SkyFloatingLabelTextField
+    - SendBirdSDK
     - Stripe
+    - TTTAttributedLabel
+    - "UITextView+Placeholder"
 
 SPEC CHECKSUMS:
   ActionSheetPicker: cc5255a36aabaf34245b97a478059d26bac8cd84
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  AlamofireImage: 78d67ccbb763d87ba44b21583d2153500a195630
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
+  CCBottomRefreshControl: 389780b4488321c91d18f66a6da5ef9606df6de5
+  Crashlytics: ccaac42660eb9351b9960c0d66106b0bcf99f4fa
+  Fabric: f233c9492b3bbc1f04e3882986740f7988a58edb
   FacebookCore: fe93222bb70346730ef33b061d493e9e7a7cb1f5
   FacebookLogin: a4e225974791c82836765a294582b4778baffc07
   FBSDKCoreKit: 1a5b2e3ceb5ca827a53c54aa5f4a3480efff80d2
   FBSDKLoginKit: 00a3d65d1226852f9d76dcddff01981e5e6d9c38
   Firebase: 75ea9e232eefa158c1049028030b8f661a2ccb62
   FirebaseAnalytics: 993577e91157feb40945abedd6ab346d8a4b6ac8
+  FirebaseAuth: 657a25e4be044d2d333663ebf515a861c5a59cd7
+  FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
   FirebaseCore: cb9ee75e0894def766167c95a4d5a14b1c138269
+  FirebaseDynamicLinks: eb41fb20677b0a6e944b47f45cbe59f388e9e5cc
   FirebaseInstanceID: ea5af6920d0a4a29b40459d055bebe4a6c1333c4
   FirebaseMessaging: f67b3719f520ee200da0e20ce577fe2bce0c01d0
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GoogleAppMeasurement: f7507b39b70ad0bd80b3d81518b2f43868974307
   GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   GooglePlacePicker: 59ea44db173c58486ad6123993e81feefcbce9c3
@@ -180,16 +299,24 @@ SPEC CHECKSUMS:
   GoogleSignIn: 591e46382014e591269f862ba6e7bc0fbd793532
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   GoogleUtilities: 06b66f9567769a7958db20a92f0128b2843e49d5
-  GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
+  GTMOAuth2: e8b6512c896235149df975c41d9a36c868ab7fba
   GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
-  ImagePicker: db1fd7626337b2577c523bef5f499bbbe5a37079
+  HTMLKit: 91dbd983c94f264c6ddea27d317f5a66368dd20b
+  ImageSlideshow: f0f33e1a20668e83d77f5fb7729e4ae4437c0759
   LGSideMenuController: ae40c80983ab8b8801c7cef0a6804d43aaa72d45
+  MaterialComponents: 5a8386aa9de7ee8bf9a6d31ac73b82a0f0a39a1e
+  MDFInternationalization: 010097556d6b09d2c4ea38e0820ea6d37be6a314
+  MGSwipeTableCell: dc4eca3212ed38a563b27d6aa7b3c01ce656c1e2
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
+  RSKImageCropper: 05e3b82a18da83ea3c2b7bffa7f2199a621d6802
   SDWebImage: ed3095af2ff88b436426037444979b917f6c5575
-  SkyFloatingLabelTextField: 4cbeece9c3aae97c6019d8fae511cb5b755874f7
+  SendBirdSDK: 43c26dc6e81286f396e37a202d6210a642c86f04
   Stripe: 2c69e216061d54d9c538204bb4f58bd597ddfc5b
+  TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
+  "UITextView+Placeholder": 0c3efd97f37ea64bde7f34cc6e90fe02e87b3909
 
-PODFILE CHECKSUM: 6f453d36761ddb8a55505474f264257a42d640aa
+PODFILE CHECKSUM: 48d7e4710ba2ebbede15703b307e2cf3fdeca062
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.7.4

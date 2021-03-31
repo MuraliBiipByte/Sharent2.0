@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="245" id="7Ny-37-1hm" customClass="IncomingUserMessageTableViewCell" customModule="SendBird_iOS" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="245"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7Ny-37-1hm" id="gso-6y-6Ca">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="244.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="osm-bb-9Q1" userLabel="Date Seperator View">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="24"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B23-QJ-Hvj" userLabel="Left Line View">
+                                <rect key="frame" x="0.0" y="11.5" width="120" height="1"/>
+                                <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.74901960779999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="nUa-3m-dxw"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="21 Sep, 2016" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xvF-7k-pU5" userLabel="Date Label">
+                                <rect key="frame" x="124" y="5" width="72" height="14.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="12"/>
+                                <color key="textColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.74901960779999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Sm-we-ICa" userLabel="Right Line View">
+                                <rect key="frame" x="200" y="11.5" width="120" height="1"/>
+                                <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.74901960779999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="z11-RO-yOJ"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="B23-QJ-Hvj" firstAttribute="leading" secondItem="osm-bb-9Q1" secondAttribute="leading" id="0RC-Tr-5rr"/>
+                            <constraint firstAttribute="height" constant="24" id="2Ey-JA-IIg" userLabel="Date Seperator View Height"/>
+                            <constraint firstItem="5Sm-we-ICa" firstAttribute="leading" secondItem="xvF-7k-pU5" secondAttribute="trailing" constant="4" id="7u1-G9-4f4"/>
+                            <constraint firstItem="B23-QJ-Hvj" firstAttribute="centerY" secondItem="osm-bb-9Q1" secondAttribute="centerY" id="MIH-TA-QbZ"/>
+                            <constraint firstAttribute="trailing" secondItem="5Sm-we-ICa" secondAttribute="trailing" id="VJD-3Q-z8M"/>
+                            <constraint firstItem="xvF-7k-pU5" firstAttribute="centerY" secondItem="osm-bb-9Q1" secondAttribute="centerY" id="XBf-KB-8U0"/>
+                            <constraint firstItem="xvF-7k-pU5" firstAttribute="centerX" secondItem="osm-bb-9Q1" secondAttribute="centerX" id="Zle-Af-I6D"/>
+                            <constraint firstItem="5Sm-we-ICa" firstAttribute="centerY" secondItem="osm-bb-9Q1" secondAttribute="centerY" id="mst-hL-Zqy"/>
+                            <constraint firstItem="xvF-7k-pU5" firstAttribute="leading" secondItem="B23-QJ-Hvj" secondAttribute="trailing" constant="4" id="yuN-YB-znU"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="12"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img_profile" translatesAutoresizingMaskIntoConstraints="NO" id="Mi0-ID-wPU" userLabel="Profile Image View">
+                        <rect key="frame" x="14" y="34" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="ggh-9j-4zQ"/>
+                            <constraint firstAttribute="height" constant="40" id="uYf-TN-Vwh"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="20"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vaO-Rl-77H" userLabel="Message Container View">
+                        <rect key="frame" x="62" y="34" width="152" height="169.5"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yg2-sv-9hE" userLabel="Message Label" customClass="TTTAttributedLabel">
+                                <rect key="frame" x="10" y="10" width="132" height="149.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.93333333330000001" green="0.94509803920000002" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Yg2-sv-9hE" secondAttribute="bottom" constant="10" id="6fv-Ot-ngc"/>
+                            <constraint firstItem="Yg2-sv-9hE" firstAttribute="leading" secondItem="vaO-Rl-77H" secondAttribute="leading" constant="10" id="BUL-nu-n6Q"/>
+                            <constraint firstAttribute="trailing" secondItem="Yg2-sv-9hE" secondAttribute="trailing" constant="10" id="Gm2-gh-Gnd"/>
+                            <constraint firstItem="Yg2-sv-9hE" firstAttribute="top" secondItem="vaO-Rl-77H" secondAttribute="top" constant="10" id="UrE-5n-SEj"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99:99 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="etF-yW-0gc" userLabel="Message Date Label">
+                        <rect key="frame" x="222" y="189.5" width="74" height="14"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="74" id="z2h-sC-VZo"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                        <color key="textColor" red="0.5568627451" green="0.5568627451" blue="0.5568627451" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="vaO-Rl-77H" firstAttribute="top" secondItem="Mi0-ID-wPU" secondAttribute="top" id="BzI-an-XOf"/>
+                    <constraint firstItem="vaO-Rl-77H" firstAttribute="leading" secondItem="Mi0-ID-wPU" secondAttribute="trailing" constant="8" id="LhY-Kx-XIX"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="etF-yW-0gc" secondAttribute="trailing" constant="24" id="MpU-z7-H6o"/>
+                    <constraint firstItem="vaO-Rl-77H" firstAttribute="top" secondItem="osm-bb-9Q1" secondAttribute="bottom" constant="10" id="UaP-1l-bZM"/>
+                    <constraint firstItem="Mi0-ID-wPU" firstAttribute="leading" secondItem="gso-6y-6Ca" secondAttribute="leading" constant="14" id="eKs-sc-Yu6"/>
+                    <constraint firstAttribute="trailing" secondItem="osm-bb-9Q1" secondAttribute="trailing" id="fGq-jl-Gp6"/>
+                    <constraint firstItem="osm-bb-9Q1" firstAttribute="top" secondItem="gso-6y-6Ca" secondAttribute="top" id="hfw-73-eYu"/>
+                    <constraint firstItem="etF-yW-0gc" firstAttribute="bottom" secondItem="vaO-Rl-77H" secondAttribute="bottom" id="rzg-RP-uA0"/>
+                    <constraint firstItem="etF-yW-0gc" firstAttribute="leading" secondItem="vaO-Rl-77H" secondAttribute="trailing" constant="8" id="sgK-6x-7vx"/>
+                    <constraint firstItem="osm-bb-9Q1" firstAttribute="leading" secondItem="gso-6y-6Ca" secondAttribute="leading" id="uEl-R8-EqE"/>
+                    <constraint firstItem="osm-bb-9Q1" firstAttribute="centerX" secondItem="gso-6y-6Ca" secondAttribute="centerX" id="uq6-7b-tXd"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="dateSeperatorLabel" destination="xvF-7k-pU5" id="dMy-OW-6QC"/>
+                <outlet property="dateSeperatorView" destination="osm-bb-9Q1" id="Hrt-gO-qTZ"/>
+                <outlet property="dateSeperatorViewBottomMargin" destination="UaP-1l-bZM" id="fJb-dr-on2"/>
+                <outlet property="dateSeperatorViewHeight" destination="2Ey-JA-IIg" id="aDX-gR-gyN"/>
+                <outlet property="dateSeperatorViewTopMargin" destination="hfw-73-eYu" id="I9V-jW-mAT"/>
+                <outlet property="messageContainerBottomPadding" destination="6fv-Ot-ngc" id="dVh-9j-fOQ"/>
+                <outlet property="messageContainerLeftMargin" destination="LhY-Kx-XIX" id="YGc-Cw-S2v"/>
+                <outlet property="messageContainerLeftPadding" destination="BUL-nu-n6Q" id="6Up-5q-s1e"/>
+                <outlet property="messageContainerRightPadding" destination="Gm2-gh-Gnd" id="X2w-9x-8Dw"/>
+                <outlet property="messageContainerTopPadding" destination="UrE-5n-SEj" id="sxM-0T-Vuh"/>
+                <outlet property="messageContainerView" destination="vaO-Rl-77H" id="haV-w0-iA4"/>
+                <outlet property="messageDateLabel" destination="etF-yW-0gc" id="j8Y-V0-u2e"/>
+                <outlet property="messageDateLabelLeftMargin" destination="sgK-6x-7vx" id="PUQ-hX-8Ag"/>
+                <outlet property="messageDateLabelRightMargin" destination="MpU-z7-H6o" id="Ckv-KO-3cb"/>
+                <outlet property="messageDateLabelWidth" destination="z2h-sC-VZo" id="gZK-LH-gWz"/>
+                <outlet property="messageLabel" destination="Yg2-sv-9hE" id="llU-ZK-YQp"/>
+                <outlet property="profileImageLeftMargin" destination="eKs-sc-Yu6" id="wVn-P5-zr6"/>
+                <outlet property="profileImageView" destination="Mi0-ID-wPU" id="rWw-Yi-Lpe"/>
+                <outlet property="profileImageWidth" destination="uYf-TN-Vwh" id="m7e-I6-Oft"/>
+            </connections>
+            <point key="canvasLocation" x="25" y="152.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="img_profile" width="58.5" height="58.5"/>
+    </resources>
+</document>

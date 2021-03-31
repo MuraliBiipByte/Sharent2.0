@@ -10,15 +10,16 @@ import UIKit
 
 class ConfirmCollectedViewController: UIViewController
 {
-
+    
     var userId = String()
     var userLoginType = String()
+    var strStatus = String()
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
-        self.title = "My Booking"
+        self.title = "MY BOOKING"
         
         userId = UserDefaults.standard.value(forKey: "user_id") as! String
         userLoginType = UserDefaults.standard.value(forKey: "user_type") as! String
@@ -33,7 +34,8 @@ class ConfirmCollectedViewController: UIViewController
     @IBAction func btn_Yes_tapped()
     {
         
-        let paramsdic = ["api_key_data":WebServices.API_KEY,"merchant_id":userId,"user_type":userLoginType,"reference_id":ProductInformation.productReferenceId!]
+        let paramsdic = ["api_key_data":WebServices.API_KEY,"merchant_id":userId,"user_type":userLoginType,"order_id":ProductInformation.productOrderId!,"status":strStatus]
+        
         self.view.StartLoading()
         ApiManager().postRequest(service:WebServices.MERCHANT_CONFIRM_COLLECTED, params: paramsdic) { (result, success) in
             self.view.StopLoading()
@@ -67,11 +69,11 @@ class ConfirmCollectedViewController: UIViewController
     
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
     
     

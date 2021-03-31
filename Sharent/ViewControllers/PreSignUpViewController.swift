@@ -111,7 +111,7 @@ class PreSignUpViewController: UIViewController {
         let paramsDict = ["api_key_data":WebServices.API_KEY,
                           "email":self.txtField2.text!,
                           ]
-        print("\(paramsDict)")
+      
         self.view.endEditing(true)
         self.view.StartLoading()
         ApiManager().postRequest(service:WebServices.PRE_AUTH_EMAIL_CHECK, params: paramsDict)
@@ -152,7 +152,7 @@ class PreSignUpViewController: UIViewController {
         let paramsDict = ["api_key_data":WebServices.API_KEY,
                           "email":strEmail,"mobile":"+65\(self.txtField2.text!)","telcode":"+65"
         ]
-        print("\(paramsDict)")
+        
         self.view.endEditing(true)
         self.view.StartLoading()
         ApiManager().postRequest(service:WebServices.PRE_AUTH_MOBILENUMBER_CHECK, params: paramsDict)
@@ -191,7 +191,7 @@ class PreSignUpViewController: UIViewController {
             let paramsDict = ["api_key_data":WebServices.API_KEY,
                               "mobile":self.strPhone,"mobile_otp":self.txtField2.text!,"email":strEmail,"telcode":"+65",
             ]
-            print("\(paramsDict)")
+          
             self.view.endEditing(true)
             self.view.StartLoading()
             ApiManager().postRequest(service:WebServices.PRE_AUTH_OTP_CHECK, params: paramsDict)
@@ -229,11 +229,12 @@ class PreSignUpViewController: UIViewController {
             }
         }
     
-    func chk_passwordset()  {
+    func chk_passwordset()
+    {
         let paramsDict = ["api_key_data":WebServices.API_KEY,
-                          "mobile":self.strPhone,"password":self.txtField1.text!,"confpassword":self.txtField2.text!,"email":strEmail,"telcode":"+65","user_type":"buyer","name":strName
+                          "mobile":self.strPhone,"password":self.txtField1.text!,"confpassword":self.txtField2.text!,"email":strEmail,"telcode":"+65","user_type":BUYER,"name":strName
                           ]
-        print("\(paramsDict)")
+       
         self.view.endEditing(true)
         self.view.StartLoading()
         ApiManager().postRequest(service:WebServices.PRE_SIGNUP_PASSWORD_SET, params: paramsDict)
@@ -253,7 +254,7 @@ class PreSignUpViewController: UIViewController {
                 let dataDictionary = resultDictionary["message"]
                 self.showAlert(message: (dataDictionary) as! String)
               
-                let viewController = self.storyboard?.instantiateViewController(withIdentifier: "ViewController")as! ViewController
+                let viewController = self.storyboard?.instantiateViewController(withIdentifier: "NewLoginViewController")as! NewLoginViewController
                 self.present(viewController, animated: true, completion: nil)
                 
             }
@@ -265,8 +266,9 @@ class PreSignUpViewController: UIViewController {
 
     @IBAction func btnMenu_Tapped(_ sender: Any) {
         
-        UIView.animate(withDuration: 0.4, animations:{
-            self.sideMenuController?.leftViewWidth = 280
+        UIView.animate(withDuration: 0.4, animations:
+            {
+            self.sideMenuController?.leftViewWidth = self.view.frame.width - 100
             self.sideMenuController?.showLeftView(animated:true, completionHandler :nil)
         })
     }
@@ -275,6 +277,6 @@ class PreSignUpViewController: UIViewController {
 extension PreSignUpViewController {
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title:Constants.APP_NAME, Message:message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message:message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
 }

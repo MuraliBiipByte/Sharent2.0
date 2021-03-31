@@ -31,7 +31,7 @@ class ConfirmReturnedViewController: UIViewController
     
     func confirmReturn(productCondition:String)
     {
-        let paramsdic = ["api_key_data":WebServices.API_KEY,"user_id":userId,"reference_id":ProductInformation.productReferenceId!,"good_condition":productCondition]
+        let paramsdic = ["api_key_data":WebServices.API_KEY,"user_id":userId,"order_id":ProductInformation.productOrderId!,"good_condition":productCondition]
         self.view.StartLoading()
         ApiManager().postRequest(service:WebServices.BUYER_CONFIRM_RETURN, params: paramsdic) { (result, success) in
             self.view.StopLoading()
@@ -76,11 +76,11 @@ class ConfirmReturnedViewController: UIViewController
     
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
   
 

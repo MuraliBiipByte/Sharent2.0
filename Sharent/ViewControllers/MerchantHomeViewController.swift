@@ -7,52 +7,90 @@
 //
 
 import UIKit
+import CCBottomRefreshControl
 
-class MerchantHomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, FloatRatingViewDelegate
+class MerchantHomeViewController: UIViewController, UICollectionViewDelegateFlowLayout, FloatRatingViewDelegate, UITableViewDataSource,UITableViewDelegate
 {
+    
+    
+    var groupChannelListViewController: GroupChannelListViewController?
+    
+    weak var delegate: CreateGroupChannelSelectOptionViewControllerDelegate?
     
     @IBOutlet weak var scrollView:UIScrollView!
     
-    @IBOutlet weak var collectionviewMyInventoryProducts:UICollectionView!
     @IBOutlet weak var imgProfileMerchant:UIImageView!
-    @IBOutlet weak var btnAddProduct:UIButton!
+//    @IBOutlet weak var btnAddProduct:UIButton!
     @IBOutlet weak var merchantView:UIView!
     
     @IBOutlet weak var lblMerchantName:UILabel!
     @IBOutlet weak var lblMerchantCompany:UILabel!
+    @IBOutlet weak var listingTableView: UITableView!
+   
+    
+    @IBOutlet weak var listingTableviewHeight: NSLayoutConstraint!
+    
+    
     var arrProducts = [AnyObject]()
     
-    var arrCategorieids = [AnyObject]()
-    var arrCategorieNames = [AnyObject]()
-    
-    var userId = String()
-    var userName = String()
-    var usercompany = String()
+    var userId :String? = ""
+    var userLoginType : String? = ""
+    var userFcmToken : String? = ""
+    var userName : String? = ""
+    var usercompany :String? = ""
     var userImage :String? = ""
+    var merchantType :String? = ""
     
-    @IBOutlet weak var collectionviewMyInventoryProductsHeight:NSLayoutConstraint!
+    // Merchant
+    var arrMarchantMenuImages = [String]()
+    var arrMarchantMenuTitles = [String]()
+    var arrMarchantMenuClassesIds = [String]()
+   
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.isHidden = false
+         self.navigationController?.navigationItem.hidesBackButton = true
+        self.title = "HOME"
         
-        self.title = "Home"
+        listingTableView.dataSource = self
+        listingTableView.delegate = self
+       
+        listingTableView.tableFooterView = UIView();
+        // Merchant
         
-        scrollView.isHidden = true
+        arrMarchantMenuTitles = ["Create Listing","My Listings","Revenue","History","Chat","Edit Profile","Help","Logout"]
         
-        userId = UserDefaults.standard.value(forKey: "user_id") as! String
-        userName = UserDefaults.standard.value(forKey: "userName") as! String
-        usercompany = UserDefaults.standard.value(forKey: "company")as! String
+        arrMarchantMenuImages = ["iconCreateListing","iconMyListing","iconRevenue","iconTransaction","IconMenuChat","iconProfile","iconHelp","IconMenuLogout"]
+        
+        arrMarchantMenuClassesIds = ["CreateProductImagesViewController","ProductsViewController","MyRevenueViewController","MyBookingsViewController","Help","MyAccountViewController","HelpViewController","logout"]
+      
+        
+        listingTableView.layer.shadowColor = UIColor.black.cgColor
+        listingTableView.layer.shadowOpacity = 0.5
+        listingTableView.layer.shadowOffset = CGSize.zero
+        listingTableView.layer.shadowRadius = 3
+        listingTableView.layer.cornerRadius = 4
+        listingTableView.layer.masksToBounds = false
+        
+        
+        userId = UserDefaults.standard.value(forKey: "user_id") as? String
+        userName = UserDefaults.standard.value(forKey: "userName") as? String
+        usercompany = UserDefaults.standard.value(forKey: "company") as? String
         userImage = UserDefaults.standard.value(forKey: "userImage")as? String
-        
-        
-        getAllCategories()
-        
+        merchantType = UserDefaults.standard.value(forKey: "merchantType") as? String
+        userLoginType = UserDefaults.standard.value(forKey: "user_type")as? String
+        userFcmToken = UserDefaults.standard.value(forKey: "fcm_Token") as? String
+      
         
         lblMerchantName.text = userName
-        lblMerchantCompany.text = usercompany
+        lblMerchantCompany.text = nil
+        if merchantType != "3"
+        {
+            lblMerchantCompany.text = usercompany
+        }
         
         merchantView.layer.shadowColor = UIColor.black.cgColor
         merchantView.layer.shadowOpacity = 0.5
@@ -63,114 +101,165 @@ class MerchantHomeViewController: UIViewController, UICollectionViewDataSource, 
         imgProfileMerchant?.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "userplaceholder"))
         imgProfileMerchant.layer.cornerRadius = imgProfileMerchant.frame.size.height/2
         imgProfileMerchant.layer.masksToBounds = true
-        
-        
-        
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 8, left: 4, bottom: 4, right: 4)
-        layout.minimumInteritemSpacing = 8
-        layout.minimumLineSpacing = 8
-        collectionviewMyInventoryProducts!.collectionViewLayout = layout
-        
+        imgProfileMerchant.layer.borderWidth = 0.2
+        imgProfileMerchant.layer.borderColor = NAVIGATION_COLOR.cgColor
         
     }
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
-    
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
-    {
-        return self.arrProducts.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return arrMarchantMenuTitles.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
-            "ProductsCollectionViewCell", for: indexPath) as! ProductsCollectionViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        cell.ratingView.editable = false
-        cell.ratingView.rating = Double(self.arrProducts[indexPath.row]["average_rating"] as! String)!
-        cell.ratingView.type = .wholeRatings
-        cell.ratingView.delegate = self
-        cell.ratingView.backgroundColor = UIColor.clear
-        
-        
-        cell.lblRating.text = String(format: "%d ratings", self.arrProducts[indexPath.row]["total_ratings"] as! Int)
-        
-        
-        cell.mainBackgroundView.layer.borderWidth = 0.3
-        cell.mainBackgroundView.layer.cornerRadius = 5
-        cell.mainBackgroundView.layer.borderColor = UIColor.gray.cgColor
-        cell.mainBackgroundView.layer.masksToBounds = true
-        
-        let image =  "\(WebServices.BASE_URL)\(self.arrProducts[indexPath.row]["photo_android1"] as! String)"
-        cell.imgProduct.sd_setImage(with: URL(string: image), placeholderImage: #imageLiteral(resourceName: "productPlaceholder"))
-        cell.lblProductName.text = self.arrProducts[indexPath.row]["product_name"] as? String
-        cell.lblProductRate.text = String(format: "$%@ Per Day", self.arrProducts[indexPath.row]["price"] as! String)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTableViewCell") as! MenuTableViewCell
+        cell.lblTitleMenu.text = "\(arrMarchantMenuTitles[indexPath.row])"
+        cell.imageMenu.image = UIImage(named: "\(arrMarchantMenuImages[indexPath.row])")
+        cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+         listingTableviewHeight.constant = CGFloat(arrMarchantMenuTitles.count * 64)
         return cell
+        
     }
+    
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
+        return 64
+    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        switch indexPath.row
+        {
+        case 1...2:
+            if userId == nil
+            {
+                showAlert(message: "Please login to continue")
+            }
+            else
+            {
+                fcmRegistration()
+                pushViewControllers(index: indexPath.row)
+            }
+            
+        default:
+            if userId != nil
+            {
+                fcmRegistration()
+            }
+            pushViewControllers(index: indexPath.row)
+            return
+        }
+    }
+    
+    func pushViewControllers(index:Int)
+    {
+        let navigationController = sideMenuController?.rootViewController as! UINavigationController
+        
+        var vcClassId = String()
+        
+        
+        if index == 7 {
+            if userId != nil
+            {
+                UserDefaults.standard.set(nil, forKey: "user_id")
+                UserDefaults.standard.set(nil, forKey: "userName")
+                UserDefaults.standard.set(nil, forKey: "userImage")
+                UserDefaults.standard.set(nil, forKey: "user_type")
+                fcmDeregistration()
+            }
+            let initialVc = self.storyboard?.instantiateViewController(withIdentifier: "NewLoginViewController") as! NewLoginViewController
+            self.present(initialVc, animated: true, completion: nil)
+            
+        }
+        else if index == 4 {
+            
+            ConnectionManager.login(userId: userId!, nickname: userName!) { (user, error) in
+                DispatchQueue.main.async {
+                    
+                }
+                
+                guard error == nil else {
+                    let vc = UIAlertController(title: Bundle.sbLocalizedStringForKey(key: "ErrorTitle"), message: error?.domain, preferredStyle: UIAlertController.Style.alert)
+                    let closeAction = UIAlertAction(title: Bundle.sbLocalizedStringForKey(key: "CloseButton"), style: UIAlertAction.Style.cancel, handler: nil)
+                    vc.addAction(closeAction)
+                    DispatchQueue.main.async {
+                        self.present(vc, animated: true, completion: nil)
+                    }
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    
+                    if self.groupChannelListViewController == nil {
+                        self.groupChannelListViewController = GroupChannelListViewController(nibName: "GroupChannelListViewController", bundle: Bundle.main)
+                        self.groupChannelListViewController?.addDelegates()
+                    }
+                    
+                    self.present(self.groupChannelListViewController!, animated: false, completion: nil)
+                }
+            }
+        }
+        else{
+            vcClassId = "\(arrMarchantMenuClassesIds[index])"
+            let controller = self.storyboard?.instantiateViewController(withIdentifier:vcClassId)
+            navigationController.pushViewController(controller!, animated: false)
+            sideMenuController?.hideLeftView(animated: true, completionHandler: nil)
+        }
+        
+    }
+    
+    func fcmRegistration()
+    {
+        let  userFcmToken = UserDefaults.standard.value(forKey: "fcm_Token") as? String
+        let paramsDict:[String:Any] = ["api_key_data":WebServices.API_KEY,"user_id":userId!,"fcm_regid":userFcmToken!, "user_type":userLoginType!,"type":"ios"]
+        ApiManager().postRequest(service: WebServices.FCMREGISTRATION_USER, params: paramsDict)
+        { (result, success) in
+            
+            print(result)
+            
+        }
+    }
+    
+    func fcmDeregistration()
+    {
+        let paramsDict:[String:Any] = ["api_key_data":WebServices.API_KEY,"user_id":userId!,"fcm_regid":userFcmToken!, "user_type":userLoginType!,"type":"ios"]
+        ApiManager().postRequest(service: WebServices.FCMDEREGISTRATION_USER, params: paramsDict)
+        { (result, success) in
+            print(result)
+        }
+    }
+    
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
-        let merchantvc = self.storyboard?.instantiateViewController(withIdentifier: "MerchantProductDetailsViewController") as! MerchantProductDetailsViewController
+        let merchantvc = self.storyboard?.instantiateViewController(withIdentifier: "ProductDetailsViewController") as! ProductDetailsViewController
         merchantvc.strProductId = self.arrProducts[indexPath.row]["product_id"] as! String
         self.navigationController?.pushViewController(merchantvc, animated: false)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
-            return CGSize(width: self.view.frame.size.width/2-16, height: 261)
+        return CGSize(width: self.view.frame.size.width/2-12, height: 276)
     }
-    
-    @IBAction func btnAddClicked(_ sender: Any)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat
     {
-        let createProductVc = storyboard?.instantiateViewController(withIdentifier: "CreateProductImagesViewController")
-        self.navigationController?.pushViewController(createProductVc!, animated: true)
+        return 8.0
     }
-    
-    func getAllCategories()
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat
     {
-        
-        let Dict = ["api_key_data":WebServices.API_KEY,"user_type":UserType.MERCHANT,"merchant_id":userId]
-        self.view.StartLoading()
-        
-        ApiManager().postRequest(service: WebServices.GET_ALLHOME_CATAGORIES, params: Dict) { (result, success) in
-            self.view.StopLoading()
-            
-            
-            if success == false
-            {
-                self.scrollView.isHidden = true
-                self.collectionviewMyInventoryProductsHeight.constant = 0.0
-                self.collectionviewMyInventoryProductsHeight.isActive = true
-            }
-            else
-            {
-                self.scrollView.isHidden = false
-                
-                let response = result as! [String : Any]
-                let data = response ["data"]as! [String:Any]
-                self.arrProducts = data["Products"] as! [AnyObject]
-                
-                if self.arrProducts.count > 0
-                {
-                    self.collectionviewMyInventoryProducts.reloadData()
-                    self.collectionviewMyInventoryProductsHeight.constant = self.collectionviewMyInventoryProducts.collectionViewLayout.collectionViewContentSize.height
-                }
-            }
-        }
-        
+        return 8.0
     }
     
-    
-    @IBAction func btnMenu_Tapped(_ sender: Any)
+
+    func showAlert(message:String)
     {
-        
-        UIView.animate(withDuration: 0.4, animations:
-            {
-                self.sideMenuController?.leftViewWidth = 280
-                self.sideMenuController?.showLeftView(animated:true, completionHandler :nil)
-        })
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
+    
     
 }

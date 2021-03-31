@@ -88,13 +88,18 @@ class MyRevenueViewController: UIViewController,UITableViewDelegate,UITableViewD
             
             if success == false
             {
+                self.scrollView.isHidden = false
+
                self.showAlertWithAction(message: result as! String, selector:#selector(self.backVc))
+                self.lblTotalRevenue.text = String(format: " $ 0.0")
+                self.tblRevenueDetailsHeight.constant = 0.0
+                 self.tblRevenueDetailsHeight.isActive = true
+                
                 return
             }
             else
             {
                 self.scrollView.isHidden = false
-                
                 let resultDictionary = result as! [String : Any]
                 let dataDictionary = resultDictionary["data"] as? [String:Any]
                 self.revenuedetails = dataDictionary!["revenue_details"] as! [AnyObject]
@@ -104,8 +109,7 @@ class MyRevenueViewController: UIViewController,UITableViewDelegate,UITableViewD
                 {
                     self.tblRevenueDetails.reloadData()
                 }
-                
-                
+            
             }
         }
     }
@@ -117,6 +121,8 @@ class MyRevenueViewController: UIViewController,UITableViewDelegate,UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRevenueTableViewCell") as! MyRevenueTableViewCell
+        cell.viewUnderimgProduct.layer.cornerRadius = 8
+        cell.viewUnderimgProduct.layer.masksToBounds = true
         
         cell.lblProductName.text = self.revenuedetails[indexPath.row]["product_name"] as? String
         cell.lblProductUserName.text = self.revenuedetails[indexPath.row]["user_name"] as? String
@@ -203,10 +209,10 @@ class MyRevenueViewController: UIViewController,UITableViewDelegate,UITableViewD
     }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
 }

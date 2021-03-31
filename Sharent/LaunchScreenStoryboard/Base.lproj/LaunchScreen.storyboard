@@ -25,7 +25,7 @@
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.90196078431372551" green="0.90196078431372551" blue="0.90196078431372551" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96470588235294119" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="N3G-Is-oKZ" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="0lK-Fd-fpf"/>
                             <constraint firstItem="N3G-Is-oKZ" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="8JT-5E-3x5"/>
@@ -40,6 +40,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="newlogo" width="256" height="256"/>
+        <image name="newlogo" width="512" height="512"/>
     </resources>
 </document>

@@ -9,15 +9,39 @@
 import UIKit
 import WebKit
 class RegisterTermsViewController: UIViewController,WKNavigationDelegate {
+    
+    var urlIndex = Int()
+    
     @IBOutlet weak var wkWebView:WKWebView!
+    @IBOutlet weak var navigationView:UIView!
+    
+    @IBOutlet weak var navigationTitle:UILabel!
 
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-        self.loadWebview(urlString: WebServices.BASE_URL_SERVICE+WebServices.REGISTER_TERMS_CONDITIONS)
-        // Do any additional setup after loading the view.
+        
+        navigationView.backgroundColor = APP_COLOR
+        
+        switch urlIndex
+        {
+        
+        case 1:
+            navigationTitle.text = "TERMS OF USE"
+            self.loadWebview(urlString: WebServices.BASE_URL_SERVICE+WebServices.REGISTER_TERMS_CONDITIONS)
+        case 2:
+             navigationTitle.text = "SERVICE AGREEMENT"
+            self.loadWebview(urlString: WebServices.BASE_URL_SERVICE+WebServices.SERVICE_AGREEMENT)
+        case 3:
+            navigationTitle.text = "PRIVACY POLICY"
+            self.loadWebview(urlString: WebServices.BASE_URL_SERVICE+WebServices.PRIACY_POLICY)
+        default:
+            print("Something wrong")
+        }
     }
 
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }

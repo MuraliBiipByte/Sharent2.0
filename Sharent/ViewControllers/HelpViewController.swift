@@ -12,7 +12,7 @@ class HelpViewController: UIViewController, UITableViewDelegate, UITableViewData
 {
    
     var helpAttributes = [String]()
-    
+    var userType :String?
     @IBOutlet weak var helpTableview:UITableView!
     
     @IBOutlet weak var helpTableviewHeight:NSLayoutConstraint!
@@ -21,10 +21,11 @@ class HelpViewController: UIViewController, UITableViewDelegate, UITableViewData
     {
         super.viewDidLoad()
         
-        self.title = "Help"
+        self.title = "HELP"
         
         helpAttributes = ["Privacy Policy","Terms of use","Contact Us","FAQ"]
     
+        userType = UserDefaults.standard.string(forKey: "user_type")
         helpTableview.delegate = self
         helpTableview.dataSource = self
 
@@ -55,7 +56,7 @@ class HelpViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.navigationController?.pushViewController(contactVc, animated: true)
         default:
             let privacyVc = self.storyboard?.instantiateViewController(withIdentifier: "PrivacyPolicyViewController") as! PrivacyPolicyViewController
-            privacyVc.title = "\(helpAttributes[indexPath.row])"
+            privacyVc.title = "\(helpAttributes[indexPath.row].uppercased())"
             privacyVc.urlIndex = indexPath.row
             self.navigationController?.pushViewController(privacyVc, animated: true)
         }
@@ -65,10 +66,17 @@ class HelpViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBAction func btn_Back_Tapped(_ sender: Any)
     {
-        UIView.animate(withDuration: 0.4, animations:{
-            self.sideMenuController?.leftViewWidth = 280
-            self.sideMenuController?.showLeftView(animated:true, completionHandler :nil)
-        })
+
+        if userType == MERCHANT
+        {
+            let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "MerchantHomeViewController")
+            self.navigationController?.pushViewController(navigateToHome!, animated: false)
+        }else{
+            let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController")
+            self.navigationController?.pushViewController(navigateToHome!, animated: false)
+        }
+       
+        
         
     }
     

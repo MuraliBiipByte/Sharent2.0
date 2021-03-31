@@ -58,7 +58,7 @@ class SeeAllReviewsViewController: UIViewController,UITableViewDelegate,UITableV
                 imageView.image = UIImage(named: "IconNoReviews")
                 let label = UILabel(frame: CGRect(x: 0, y: imageView.frame.origin.y+imageView.frame.height, width: self.view.frame.width, height: 21))
                 label.textAlignment = NSTextAlignment.center
-                label.font = Constants.APP_FONT
+                label.font = APP_FONT
                 label.text = "No Reviews found"
                 self.view.addSubview(imageView)
                 self.view.addSubview(label)
@@ -108,8 +108,7 @@ class SeeAllReviewsViewController: UIViewController,UITableViewDelegate,UITableV
         let userDict = self.arrReviewData[indexPath.row]["user_data"] as! [String:AnyObject]
   
         let userImg =  String("\(WebServices.BASE_URL)\(String(describing: userDict["user_image"]!))")
-        
-        print(userImg)
+       
         cell.imgUser.sd_setImage(with: URL(string: userImg), placeholderImage: UIImage(named: "userplaceholder"))
        
         cell.lbl_UserName.text = userDict["username"] as? String
@@ -136,10 +135,10 @@ class SeeAllReviewsViewController: UIViewController,UITableViewDelegate,UITableV
     }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
 }

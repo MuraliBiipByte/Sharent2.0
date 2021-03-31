@@ -42,7 +42,7 @@ class AddToCardViewController: UIViewController ,STPAddCardViewControllerDelegat
         let year:Int? = Int(result)
         self.years.append(String(format:"%d",year!))
         
-        print(result)
+     
         for i in 1 ... 15
         {
             let year1 = year! + i
@@ -108,7 +108,6 @@ class AddToCardViewController: UIViewController ,STPAddCardViewControllerDelegat
         let yearstr = "\(self.txtYear.text!)"
         let year:Int = Int(yearstr)!
         let cvvNumber = "\(self.txtCVVNumber.text!)"
-        print(cvvNumber)
         cardParams.number = self.txtCardNumber.text
         cardParams.expMonth = UInt(month)
         cardParams.expYear = UInt(year)
@@ -128,8 +127,7 @@ class AddToCardViewController: UIViewController ,STPAddCardViewControllerDelegat
             let tkn = "\(token.tokenId)"
             
             let paramsDic = ["api_key_data":WebServices.API_KEY,"user_id":self.strUserId,"stripetoken":tkn]
-            
-            print(paramsDic)
+          
             self.view.StartLoading()
             ApiManager().postRequest(service:WebServices.LALAMOVE_ADD_NEW_CARD, params: paramsDic )
             { (result, success) in
@@ -157,11 +155,11 @@ class AddToCardViewController: UIViewController ,STPAddCardViewControllerDelegat
 
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
     
     func addCardViewControllerDidCancel(_ addCardViewController: STPAddCardViewController)

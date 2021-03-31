@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OpenChannelChattingViewController" customModule="ChatSharent" customModuleProvider="target">
+            <connections>
+                <outlet property="bottomMargin" destination="5hC-jb-1nw" id="lno-Ah-dDO"/>
+                <outlet property="chattingView" destination="6Ba-4q-5r0" id="fbX-VT-zj5"/>
+                <outlet property="imageViewerLoadingIndicator" destination="jSd-K8-YUH" id="iOC-uk-jYJ"/>
+                <outlet property="imageViewerLoadingView" destination="YEW-ut-15e" id="aX3-xZ-hTm"/>
+                <outlet property="imageViewerLoadingViewNavItem" destination="AVr-Rp-yzC" id="pvO-U7-Nj3"/>
+                <outlet property="navItem" destination="ldd-AD-41T" id="acY-fo-2de"/>
+                <outlet property="navigationBarHeight" destination="BEZ-x7-C34" id="1fP-Xr-onX"/>
+                <outlet property="view" destination="3SP-8z-C74" id="fAQ-OA-v3S"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="3SP-8z-C74">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oeW-ws-E2p" customClass="CustomNavigationBar" customModule="SendBird_iOS" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="BEZ-x7-C34"/>
+                    </constraints>
+                    <items>
+                        <navigationItem title="Open Channel(2)" id="ldd-AD-41T"/>
+                    </items>
+                </navigationBar>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Ba-4q-5r0" userLabel="Chatting Container View" customClass="ChattingView" customModule="ChatSharent" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="64" width="414" height="774"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YEW-ut-15e" userLabel="Image Viewer Loading View">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQg-fE-54l">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <color key="barTintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <items>
+                                <navigationItem id="AVr-Rp-yzC"/>
+                            </items>
+                        </navigationBar>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="jSd-K8-YUH" userLabel="Image Viewer Loading Activity Indicator">
+                            <rect key="frame" x="197" y="438" width="20" height="20"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="jSd-K8-YUH" firstAttribute="centerY" secondItem="YEW-ut-15e" secondAttribute="centerY" id="BI5-uL-h6W"/>
+                        <constraint firstAttribute="trailing" secondItem="DQg-fE-54l" secondAttribute="trailing" id="Jjy-Xg-S4E"/>
+                        <constraint firstItem="jSd-K8-YUH" firstAttribute="centerX" secondItem="YEW-ut-15e" secondAttribute="centerX" id="f50-zC-72c"/>
+                        <constraint firstItem="DQg-fE-54l" firstAttribute="top" secondItem="YEW-ut-15e" secondAttribute="top" id="p34-Dk-47x"/>
+                        <constraint firstItem="DQg-fE-54l" firstAttribute="leading" secondItem="YEW-ut-15e" secondAttribute="leading" id="xGU-2i-b3u"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="YEW-ut-15e" firstAttribute="leading" secondItem="3SP-8z-C74" secondAttribute="leading" id="2xO-i8-Acq"/>
+                <constraint firstAttribute="bottom" secondItem="6Ba-4q-5r0" secondAttribute="bottom" constant="58" id="5hC-jb-1nw"/>
+                <constraint firstAttribute="trailing" secondItem="oeW-ws-E2p" secondAttribute="trailing" id="KjH-dz-WbC"/>
+                <constraint firstAttribute="bottom" secondItem="YEW-ut-15e" secondAttribute="bottom" id="X4t-gx-PYo"/>
+                <constraint firstItem="6Ba-4q-5r0" firstAttribute="top" secondItem="oeW-ws-E2p" secondAttribute="bottom" id="XnE-14-Qpk"/>
+                <constraint firstItem="oeW-ws-E2p" firstAttribute="leading" secondItem="3SP-8z-C74" secondAttribute="leading" id="Y50-tC-OOC"/>
+                <constraint firstItem="6Ba-4q-5r0" firstAttribute="leading" secondItem="3SP-8z-C74" secondAttribute="leading" id="ZdO-ER-gsG"/>
+                <constraint firstAttribute="trailing" secondItem="6Ba-4q-5r0" secondAttribute="trailing" id="amk-Ob-aQ6"/>
+                <constraint firstItem="oeW-ws-E2p" firstAttribute="top" secondItem="3SP-8z-C74" secondAttribute="top" id="hX2-6R-DtT"/>
+                <constraint firstItem="YEW-ut-15e" firstAttribute="top" secondItem="3SP-8z-C74" secondAttribute="top" id="j2m-5L-jCS"/>
+                <constraint firstAttribute="trailing" secondItem="YEW-ut-15e" secondAttribute="trailing" id="wDZ-t4-jjK"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="ST6-qM-6dZ"/>
+            <point key="canvasLocation" x="23.199999999999999" y="51.724137931034484"/>
+        </view>
+    </objects>
+</document>

@@ -31,11 +31,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     @IBOutlet weak var txtPhoneNumber:UITextField!
     @IBOutlet weak var txtPassword:UITextField!
     @IBOutlet weak var btn_navigation_back: UIButton!
-    @IBOutlet weak var imgFb: UIImageView!
-    @IBOutlet weak var imgGoogle: UIImageView!
     @IBOutlet weak var btnSignUp: UIButton!
     @IBOutlet weak var lblDontHaveAccount: UILabel!
     @IBOutlet weak var btnForgot: UIButton!
+    @IBOutlet weak var lblOrLoginWith: UILabel!
+    @IBOutlet weak var btnFacebookLogin: UIButton!
+    @IBOutlet weak var btnGmailLogin: UIButton!
     
     var arrCountryCodes:NSArray!
     
@@ -43,29 +44,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     {
         super.viewDidLoad()
         
-        txtCountryCode.text = Constants.COUNTRY_CODE
+        txtCountryCode.text = "Email"
         txtCountryCode.isEnabled = false
-        
-//        imgFb.clipsToBounds = true
-//        imgFb.layer.cornerRadius = 15
-//        imgFb.layer.maskedCorners = [.layerMinXMaxYCorner,.layerMinXMinYCorner]
-//        
-//        imgGoogle.clipsToBounds = true
-//        imgGoogle.layer.cornerRadius = 15
-//        imgGoogle.layer.maskedCorners = [.layerMinXMaxYCorner,.layerMinXMinYCorner]
-        
+    
     }
     
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
         
-        
-        if userLoginType == UserType.MERCHANT
+      
+        if userLoginType == MERCHANT
         {
             btnSignUp.isHidden = true
             lblDontHaveAccount.isHidden = true
             btnForgot.isHidden = true
+            btnGmailLogin.isHidden = true
+            btnFacebookLogin.isHidden = true
+            lblOrLoginWith.isHidden = true
         }
    
         
@@ -78,8 +74,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     }
     @IBAction func btnLoginTapped()
     {
-        
-        
+       
         if (txtPhoneNumber.text?.isEmpty)!
         {
             self.showAlert(message:"Phone Number can't be empty!")
@@ -94,8 +89,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         }
         
         let paramsDict = ["api_key_data":WebServices.API_KEY,
-                          "telcode":self.txtCountryCode.text!,
-                          "phone":self.txtPhoneNumber.text!,
+                          // "telcode":self.txtCountryCode.text!,
+                          "email":self.txtPhoneNumber.text!,
                           "password":self.txtPassword.text!,
                           "user_type":userLoginType]
         print("\(paramsDict)")
@@ -116,11 +111,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
                 let dataDictionary = resultDictionary["data"] as? [String:Any]
                 let userDataDictionary = dataDictionary?["userdata"] as? [String : Any]
                 _ = User(userDictionay: userDataDictionary!)
-                
-             
-
-            
-                if self.userLoginType == UserType.BUYER
+  
+                if self.userLoginType == BUYER
                 {
                     if User.mobileverify == "YES"
                     {
@@ -158,6 +150,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
                     UserDefaults.standard.set(User.usertype, forKey: "user_type")
                     UserDefaults.standard.set(User.phone, forKey: "user-phone")
                     UserDefaults.standard.set(User.usercompany, forKey: "company")
+                    UserDefaults.standard.set(User.merchantType, forKey: "merchantType")
                     UserDefaults.standard.set(User.useraddress, forKey: "address")
                     UserDefaults.standard.set(User.userCity, forKey: "city")
                     UserDefaults.standard.set(User.gender, forKey: "gender")
@@ -210,7 +203,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         
             fullName = user.profile.name
             email = user.profile.email
-            self.userDataDIctionary = ["email":self.email,"name":self.fullName,"login_type":"gmail_user"]
+            self.userDataDIctionary = ["email":self.email,"name":self.fullName,"login_type":GMAIL_USER]
             self.existingEmailChecking(userDetails: self.userDataDIctionary)
             
             
@@ -222,12 +215,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
         let paramsDict:[String:Any] = ["api_key_data":WebServices.API_KEY, "email":email, "user_type":userLoginType]
         ApiManager().postRequest(service: WebServices.EXISTING_EMAIL_CHECKING, params: paramsDict) { (result, success) in
             
+          
             if success == false
             {
-                if self.userLoginType == UserType.MERCHANT
+                if self.userLoginType == MERCHANT
                 {
-                   self.showAlert(message: "Please Contact admit to register your mail as marchant")
-                    
+                   self.showAlert(message: "Please Contact admin to register your mail as merchant")
                 }
                 else
                 {
@@ -237,50 +230,48 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
             else
             {
                 let resultDictionary = result as! [String : Any]
-                let dataDictionary:[String:Any]? = resultDictionary["data"] as? [String:Any]
-                let userDataDictionary:[String:Any]? = dataDictionary?["userdata"] as? [String : Any]
+              
+                let dataDictionary = resultDictionary["data"] as? [String:Any]
+                let userDataDictionary = dataDictionary?["userdata"] as? [String : Any]
          
                 _ = User(userDictionay: userDataDictionary!)
                 
-                if self.userLoginType == UserType.MERCHANT
+                if self.userLoginType == MERCHANT
                 {
                     let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "LGSideMenu")
                     self.present(navigateToHome!, animated: true, completion: nil)
-                }
-                else{
-                
-                if User.mobileverify == "YES"
-                {
-                    
-                    let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "LGSideMenu")
-                    self.present(navigateToHome!, animated: true, completion: nil)
-                    
-                    UserDefaults.standard.set(User.userID, forKey: "user_id")
-                    UserDefaults.standard.set(User.username, forKey: "userName")
-                    UserDefaults.standard.set(User.photouser, forKey: "userImage")
-                    UserDefaults.standard.set(User.usertype, forKey: "user_type")
-                    UserDefaults.standard.set(User.phone, forKey: "user-phone")
-                    UserDefaults.standard.set(User.usercompany, forKey: "company")
-                    UserDefaults.standard.set(User.useraddress, forKey: "address")
-                    UserDefaults.standard.set(User.userCity, forKey: "city")
-                    UserDefaults.standard.set(User.gender, forKey: "gender")
-                    UserDefaults.standard.set(User.latitude, forKey: "lat")
-                    UserDefaults.standard.set(User.longtitude, forKey: "lng")
-                    UserDefaults.standard.set(User.email, forKey: "email")
-
                 }
                 else
                 {
-                    
-                    
-                    let mobileVc = self.storyboard?.instantiateViewController(withIdentifier: "MobileVerificationViewController")as! MobileVerificationViewController
-                   let userDataDictionary = UserDefaults.standard.dictionary(forKey: "userDetails")!
- 
-                    
-                    mobileVc.networkType = (userDataDictionary["login_type"] as? String)!
-                    self.present(mobileVc, animated: true, completion: nil)
-                    
-                }
+                
+                    if User.mobileverify == "YES"
+                    {
+                        UserDefaults.standard.set(User.userID, forKey: "user_id")
+                        UserDefaults.standard.set(User.username, forKey: "userName")
+                        UserDefaults.standard.set(User.photouser, forKey: "userImage")
+                        UserDefaults.standard.set(User.usertype, forKey: "user_type")
+                        UserDefaults.standard.set(User.phone, forKey: "user-phone")
+                        UserDefaults.standard.set(User.usercompany, forKey: "company")
+                        UserDefaults.standard.set(User.useraddress, forKey: "address")
+                        UserDefaults.standard.set(User.userCity, forKey: "city")
+                        UserDefaults.standard.set(User.gender, forKey: "gender")
+                        UserDefaults.standard.set(User.latitude, forKey: "lat")
+                        UserDefaults.standard.set(User.longtitude, forKey: "lng")
+                        UserDefaults.standard.set(User.email, forKey: "email")
+                        
+                        let navigateToHome = self.storyboard?.instantiateViewController(withIdentifier: "LGSideMenu")
+                        self.present(navigateToHome!, animated: true, completion: nil)
+
+                    }
+                    else
+                    {
+                        
+                        let mobileVc = self.storyboard?.instantiateViewController(withIdentifier: "MobileVerificationViewController")as! MobileVerificationViewController
+                        mobileVc.userLoginType = self.userLoginType
+                        mobileVc.networkType = userDetails["login_type"] as! String
+                        self.present(mobileVc, animated: true, completion: nil)
+                        
+                    }
                 
                 }
             }
@@ -327,8 +318,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
                 if (error == nil)
                 {
                     self.userDataDIctionary = result as! [String : Any]
-                    
-                    self.userDataDIctionary.updateValue("fb_user", forKey:"login_type")
+                 
+                    self.userDataDIctionary.updateValue(FB_USER, forKey:"login_type")
                     
                      let strFbEmail = self.userDataDIctionary["email"] as? String
                     
@@ -338,7 +329,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
                     }
                     else
                     {
-                        self.existingEmailChecking(userDetails:self.userDataDIctionary)
+            self.existingEmailChecking(userDetails:self.userDataDIctionary)
                     }
                     
                     
@@ -351,9 +342,20 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     {
         let registrationWithSocialnetworkvc = storyboard?.instantiateViewController(withIdentifier: "RegistrationWithSocialNetworkViewController") as! RegistrationWithSocialNetworkViewController
      
+        registrationWithSocialnetworkvc.strEmail = userDetails["email"] as? String
+        registrationWithSocialnetworkvc.strname = userDetails["name"] as? String
+        registrationWithSocialnetworkvc.strLoginType = userDetails["login_type"] as? String
+        
+        if let picture = userDetails["picture"] as? NSDictionary
+        {
+            if let data = picture["data"] as? NSDictionary
+            {
+                registrationWithSocialnetworkvc.strPhoto = data["url"] as? String
+                
+            }
+        }
         
         registrationWithSocialnetworkvc.userType = userLoginType
-         UserDefaults.standard.set(userDetails, forKey: "userDetails")
         self.present(registrationWithSocialnetworkvc, animated: true, completion: nil)
         
     }
@@ -365,12 +367,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate, GIDSignInDeleg
     self.present(forgotVc, animated: true, completion: nil)
 }
 
-    @IBAction func btn_Back_Tapped(_ sender: Any) {
-        
-        self.dismiss(animated: true, completion: nil)
-        
-    }
-    //Uitextfiled Delegates
+@IBAction func btn_Back_Tapped(_ sender: Any)
+{
+    
+    self.dismiss(animated: true, completion: nil)
+    
+}
+    
+//Uitextfiled Delegates
 func textFieldShouldReturn(_ textField: UITextField) -> Bool
 {
    textField.resignFirstResponder()
@@ -379,17 +383,18 @@ func textFieldShouldReturn(_ textField: UITextField) -> Bool
   
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     
     @objc func mobileVc()
     {
-        let mobileVc = self.storyboard?.instantiateViewController(withIdentifier: "MobileVerificationViewController")
-        self.present(mobileVc!, animated: true, completion: nil)
+        let mobileVc = self.storyboard?.instantiateViewController(withIdentifier: "MobileVerificationViewController") as! MobileVerificationViewController
+        mobileVc.userLoginType = User.usertype!
+        self.present(mobileVc, animated: true, completion: nil)
     }
     @objc func registerVc()
     {
@@ -398,10 +403,13 @@ func textFieldShouldReturn(_ textField: UITextField) -> Bool
         
     }
     @IBAction func btn_SignUp_tapped(_ sender: Any) {
-        
+
         let signUp = self.storyboard?.instantiateViewController(withIdentifier: "RegistrationViewController")as! RegistrationViewController
         signUp.userType = userLoginType
         self.present(signUp, animated: true, completion: nil)
+        
+       
+        
     }
     
     func fcmRegistration()

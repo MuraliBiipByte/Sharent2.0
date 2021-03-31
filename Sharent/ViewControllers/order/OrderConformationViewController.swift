@@ -7,195 +7,398 @@
 //
 
 import UIKit
+import Stripe
+import LGSideMenuController
 
-class OrderConformationViewController: UIViewController ,UITextFieldDelegate
+class OrderConformationViewController: UIViewController ,UITextFieldDelegate, UITableViewDataSource,UITableViewDelegate
 {
   
-    
-    @IBOutlet weak var lblProduct_Name: UILabel!
-    @IBOutlet weak var lblProduct_Description: UILabel!
-    @IBOutlet weak var lbl_NumberOf_Days: UILabel!
-    @IBOutlet weak var lbl_Dates: UILabel!
-    @IBOutlet weak var lblCollection_return: UILabel!
-    @IBOutlet weak var lblReturntype: UILabel!
-    @IBOutlet weak var lbl_Bookingreference: UILabel!
+    @IBOutlet weak var scrollview: UIScrollView!
+//    @IBOutlet weak var lblProduct_Name: UILabel!
+//    @IBOutlet weak var lblProduct_Description: UILabel!
     @IBOutlet weak var lbl_Price: UILabel!
     @IBOutlet weak var lbl_DeliveryFee: UILabel!
     @IBOutlet weak var lbl_Total: UILabel!
     @IBOutlet weak var btnConformPay: UIButton!
-    @IBOutlet weak var lbl_Discount: UILabel!
-    @IBOutlet weak var btnCheck: UIButton!
-    @IBOutlet weak var lblTermsAndCondtions: UILabel!
+    @IBOutlet weak var lbl_preAuthAmount: UILabel!
+    @IBOutlet weak var lbl_promoCode: UILabel!
     @IBOutlet weak var txtPromoCode: UITextField!
     @IBOutlet weak var btnPromocode: UIButton!
     
-    var termsAccept = false
-
-    var strDeliveryFee = String()
+    var btnConfirm = false
     var strUserId = String()
-    var strUserName = String()
-    var strUserPhone = String()
-    var strProductId = String()
-    var strFromDate = String()
-    var strToDate = String()
-    var strCollectionType = String()
-    var strReturnType = String()
-    var strCollectionCharge = String()
-    var strReturnCharge = String()
+//    var refId = String()
     var strDiscount = String()
+    var strDeliveryfee = String()
     var strPromocode = String()
-    
-    var strAttr1 = String()
-    var strAttr1Name = String()
-    var strAttr1FullAttribute = String()
-    var strAttr2 = String()
-    var strAttr2Name = String()
-    var strAttr2FullAttribute = String()
-    
-    var strAdditionalNote = String()
-    var strPaymentMethode = String()
-    var strMarchantremark = String()
-
-    var strPromoCodeType1 = ""
-    var strPromoCodeType2 = ""
+    var strTotalAmount = String()
+    var strRentalFee = String()
+    var strPreauthFee = String()
     
     //We are receiving this customer id from previous class
     var customerId = String()
-    var strStartTime = String()
-   
+    var Common_Cart_Id = String()
+    
+    var arrAllItems = [AnyObject]()
+    let dateFormatter = DateFormatter()
+    
+    
+    @IBOutlet weak var cardNumber: UILabel!
+    @IBOutlet weak var cardName: UILabel!
+    @IBOutlet weak var cardImg: UIImageView!
+    @IBOutlet weak var allItemsTV: UITableView!
+    @IBOutlet weak var btnChangCard: UIButton!
+    @IBOutlet weak var cardNumberHeight: NSLayoutConstraint!
+    @IBOutlet weak var cardNameHeight: NSLayoutConstraint!
+//    @IBOutlet weak var cardDetailsViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var summaryTableHeight: NSLayoutConstraint!
+    @IBOutlet weak var cardDisplayView: UIView!
+    @IBOutlet weak var additionalInfoView: UIView!
+    
+    
+    
+ 
     override func viewDidLoad()
     {
         super.viewDidLoad()
+ 
+        
         txtPromoCode.delegate = self
 
-        // Do any additional setup after loading the view.
+        allItemsTV.dataSource = self
+        allItemsTV.delegate = self
+        strUserId = UserDefaults.standard.value(forKey: "user_id")! as! String
+        
+        allItemsTV.estimatedRowHeight = 80.0
+        allItemsTV.rowHeight = UITableViewAutomaticDimension
+        self.allItemsTV.separatorColor = UIColor.white
+        self.scrollview.isHidden = true
+        
+       
+        self.additionalInfoView.isHidden = true
+        self.title = "CHECKOUT"
     }
+    
+    
+    
+    func getRecentCard()
+    {
+        let paramsDic = ["api_key_data":WebServices.API_KEY,"user_id":strUserId]
+        self.view.StartLoading()
+        ApiManager().postRequest(service:WebServices.LALAMOVE_GET_RECENT_CARD, params: paramsDic )
+        { (result, success) in
+            self.view.StopLoading()
+            if success == false
+            {
+                
+                self.cardNameHeight.constant = 53
+                self.cardNumberHeight.constant = 0
+                self.cardName.text = "Add New Card"
+                self.cardNumber.text = ""
+                self.btnChangCard.setTitle("Add", for: UIControlState.normal)
+                return
+            }
+            else
+            {
+                
+                self.cardNumberHeight.constant = 24
+                self.cardNameHeight.constant = 20.5
+                let response = result as! [String:Any]
+                let data = response["data"]as! [String:Any]
+                let recentCard = data["recent_card"]as! [String:Any]
+                let cardNumber = String(format: "**** **** **** %@", recentCard["card_last4"] as! String )
+                let cardName = recentCard["card_brand"]as? String
+                self.cardName.text = cardName
+                self.cardNumber.text = cardNumber
+                self.customerId = recentCard["customer_id"] as! String
+                let cardName1 = STPCard.brand(from: cardName!)
+                let cardImage = STPImageLibrary.brandImage(for: cardName1)
+                self.cardImg.image = cardImage
+                self.btnChangCard.setTitle("Change", for: UIControlState.normal)
+            }
+        }
+        
+        
+    }
+    
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
-        
-        self.title = "Summary"
-        
-        strUserId = UserDefaults.standard.value(forKey: "user_id")! as! String
-        strUserName = UserDefaults.standard.value(forKey: "userName")! as! String
-        strUserPhone = UserDefaults.standard.value(forKey: "user-phone")! as! String
-        
-        print("Product is is \(strProductId)")
-        print("Customer Id \(customerId)")
-        
-        lblProduct_Name.text = ProductInformation.productName!
-        
-        lbl_Dates.text = "\(ProductInformation.productFromDate!) to \(ProductInformation.productToDate!)"
-        
-        
-        lbl_NumberOf_Days.text = "\(String(ProductInformation.productRentalDays!)) Days"
-        lblCollection_return.text = "\(strCollectionType)"
-        lblReturntype.text = "\(strReturnType)"
-        lbl_Price.text = "$\(ProductInformation.productRental!)"
-        lbl_DeliveryFee.text = "$\(ProductInformation.productDeliveryCharges ?? "0")"
-        lbl_Discount.text = "$\(ProductInformation.productDiscount ?? "0")"
+        getCartSummary()
 
-        ProductInformation.productTotalFee = String(Int(ProductInformation.productRental!)! + Int(ProductInformation.productDeliveryCharges ?? "0")! - Int(ProductInformation.productDiscount ?? "0")!)
-        
-        print(ProductInformation.productTotalFee!)
-        print(strDeliveryFee)
+        self.getRecentCard()
+    }
+    
+    
+    
+    func getCartSummary() {
 
-        lbl_Total.text = "$\( ProductInformation.productTotalFee!)"
-        lbl_Bookingreference.text = strPaymentMethode
+        let paramsDic = ["api_key_data":WebServices.API_KEY,"user_id" : strUserId]
+      
+        self.view.StartLoading()
         
-        guard let attributes = ProductInformation.attribute else
-        {
-            lblProduct_Description.text = nil
-            strAttr1FullAttribute = ""
-            strAttr2FullAttribute = ""
-            return
+        ApiManager().postRequest(service: WebServices.CART_SUMMARY, params: paramsDic) { (result, success) in
+            self.view.StopLoading()
+            
+            if success == false
+            {
+                self.scrollview.isHidden = true
+                self.showAlert(message: result as! String)
+                return
+            }
+            else
+            {
+                self.scrollview.isHidden = false
+                
+                let response = result as! [String : Any]
+                let data = response ["data"] as! [String:Any]
+                
+                let summaryData = data["summary"] as? [AnyObject]
+                let feeData = summaryData![0]
+              
+                self.strRentalFee = feeData["total_rental_fee"] as! String
+                self.lbl_Price.text  = String(format: "$ %@", self.strRentalFee)
+                
+                self.strDeliveryfee = feeData["total_delivery_fee"] as! String
+                 self.lbl_DeliveryFee.text  = String(format: "$ %@", self.strDeliveryfee)
+              
+                self.strPreauthFee =  feeData["total_preauth_fee"] as! String
+                self.lbl_preAuthAmount.text  = String(format: "$ %@",  self.strPreauthFee)
+                
+                self.lbl_promoCode.text  = String(format: "$ %@", feeData["total_prmocode_fee"] as! String)
+                
+                self.strTotalAmount = feeData["total_amount"] as! String
+                self.lbl_Total.text  = String(format: "$ %@",self.strTotalAmount )
+                
+
+                self.arrAllItems = (data["all_items"] as? [AnyObject]) != nil  ?  (data["all_items"] as! [AnyObject]) : []
+                
+                
+                if self.arrAllItems.count > 0 {
+                    self.allItemsTV.reloadData()
+                }
+
+            }
         }
-        let keys = Array(attributes.keys)
-        
-        switch keys.count
-        {
-        case 1:
-            strAttr1 = attributes["attribute_1"] as! String
-            strAttr1Name = ProductInformation.attribute1Name!
-            lblProduct_Description.text = String(format: "(%@:%@)", strAttr1,strAttr1Name)
-            strAttr1FullAttribute = String(format: "%@:%@", strAttr1,strAttr1Name)
-        case 2:
-            strAttr1 = attributes["attribute_1"] as! String
-            strAttr1Name = ProductInformation.attribute1Name!
-            strAttr2 = attributes["attribute_2"] as! String
-            strAttr2Name = ProductInformation.attribute2Name!
-            lblProduct_Description.text = String(format: "(%@:%@,%@:%@)", strAttr1,strAttr1Name,strAttr2,strAttr2Name)
-            strAttr1FullAttribute = String(format: "%@:%@", strAttr1,strAttr1Name)
-            strAttr2FullAttribute = String(format: "%@:%@", strAttr2,strAttr2Name)
-        default:
-            lblProduct_Description.text = nil
-            strAttr1FullAttribute = ""
-            strAttr2FullAttribute = ""
-        }
-        
         
     }
-        
     
-    override func didReceiveMemoryWarning() {
+    
+    @IBAction func btn_ChangeCard_Tapped(_ sender: Any) {
+        let cardsClass = self.storyboard?.instantiateViewController(withIdentifier: "CardListViewController") as! CardListViewController
+        self.navigationController?.pushViewController(cardsClass, animated: false)
+    }
+    
+    
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.arrAllItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SummaryCell") as! SummaryCell
+        
+        cell.lblProductName.text = self.arrAllItems[indexPath.row]["product_name"] as? String
+        var startingDate = String()
+        var endingDate = String()
+            
+            //  booking date
+            if let startDate = self.arrAllItems[indexPath.row]["start_date"] as? String
+            {
+                if startDate == "" {
+//                    cell.lblBookedDays.text = String(format: "")
+                }else{
+                    
+                    if dateFormatter.dateFormat == "dd-MM-yyyy" as String {
+                        let date = dateFormatter.date(from: startDate)
+                        dateFormatter.dateFormat = "dd MMM YYYY"
+                        startingDate = dateFormatter.string(from: date!)
+                      
+                    }else{
+//                        cell.lblBookingDate.text = String(format: "")
+                    }
+                    
+                }
+            }
+        if let endDate = self.arrAllItems[indexPath.row]["end_date"] as? String
+        {
+            if endDate == "" {
+                //                    cell.lblBookedDays.text = String(format: "")
+            }else{
+                
+                if dateFormatter.dateFormat == "dd-MM-yyyy" as String {
+                    let date = dateFormatter.date(from: endDate)
+                    dateFormatter.dateFormat = "dd MMM YYYY"
+                    endingDate = dateFormatter.string(from: date!)
+                    
+                }else{
+    //           cell.lblBookingDate.text = String(format: "")
+                }
+            }
+        }
+        
+        let quantity = self.arrAllItems[indexPath.row]["quantity"] as? String
+        
+        if startingDate == "" || endingDate == "" {
+            cell.lblBookedDays.text = ""
+        }else {
+             cell.lblBookedDays.text = String(format : "%@ - %@ , Quantity : %@", startingDate,endingDate, quantity!)
+        }
+      
+        cell.rentalFee.text = String(format: "$%@", self.arrAllItems[indexPath.row]["rental_fee"] as! String)
+        
+        cell.preauthorisationAmount.text = String(format: "$ %@", self.arrAllItems[indexPath.row]["preauth_fee"] as? String ?? "")
+
+        cell .selectionStyle = UITableViewCellSelectionStyle .none
+        self.summaryTableHeight.constant = CGFloat(self.arrAllItems.count * 80)
+        
+        return cell
+    }
     @IBAction func btn_ConformPay(_ sender: Any)
     {
-        
-        if termsAccept
-        {
+        if !btnConfirm {
             
-                print("Accepted")
+            let alert = UIAlertController(title: "Confirmation",
+                                          message: "I have read and agree to the Terms & Conditions and Refund Policy.",
+                                          preferredStyle: .alert)
+            
+            let notAgree = UIAlertAction(title: "I Do Not Agree", style: .default, handler: { (action) -> Void in
+                print("NotAgree selected!")
+                self.additionalInfoView.isHidden = false
+                self.btnConformPay.setTitle("Back To Home", for: UIControl.State.normal)
+                self.btnConfirm = true
+                
+            })
+            
+            let agree = UIAlertAction(title: "I Agree", style: .default, handler: { (action) -> Void in
+                print("Agree selected!")
+                
+                let paramsDict = ["api_key_data":WebServices.API_KEY,"country":"SG","rental_fee":self.strRentalFee ,"discount_price":self.strDiscount ,"promo_code":self.txtPromoCode.text!,"stripetoken":self.customerId,"shipping_amount":self.strDeliveryfee,"environment":"IOS", "user_id":self.strUserId,"common_cart_id":self.Common_Cart_Id,"total_amount":self.strTotalAmount,"preauth_fee":self.strPreauthFee,"additional_desc":"","currency":"SGD","payment_method":"Stripe"] as [String : Any]
+                
+                self.view.StartLoading()
+                
+                ApiManager().postRequest(service:WebServices.ORDER_PLACE, params: paramsDict)
+                { (result, success) in
+                    self.view.StopLoading()
+                    
+                    if success == false
+                    {
+                        
+                        self.additionalInfoView.isHidden = true
+                        self.btnConformPay.setTitle("Confirm Rental", for: UIControl.State.normal)
+                        self.showAlert(message: result as! String)
+                        return
+                    }
+                    else
+                    {
+                        
+                        let response = result as! [String:Any]
+                        
+                        let refId = response["reference_id"] as? String ?? "0"
+                        
+                        self.sendReferenceID(refid: refId)
+                        self.additionalInfoView.isHidden = false
+                        
+                    }
+                }
+            })
+            
+            alert.view.layer.cornerRadius = 25   // change corner radius
+            alert.addAction(notAgree)
+            alert.addAction(agree)
+            
+            present(alert, animated: true, completion: nil)
+            
+        }else{
+            let mainViewController = self.storyboard?.instantiateViewController(withIdentifier: "LGSideMenu") as! LGSideMenuController
+            self.present(mainViewController, animated: true, completion: nil)
         }
-        else
-        {
-            self.showAlert(message: "Please Accept Terms And Conditions")
-            return
-        }
-        
-        let strMarchantId   =  ProductInformation.marchantId ?? ""
-        let strMarchantName = ProductInformation.marchantName ?? ""
-        let strMarchantNumber = ProductInformation.marchantNumber ?? ""
-        let strMarchantLat = ProductInformation.marchantLat ?? ""
-        let strMarchantLang = ProductInformation.marchantLang ?? ""
-        let strMarchantAddress =  ProductInformation.marchantAddress ?? ""
-        let strDiscount =  ProductInformation.productDiscount ?? "0.0"
-        
-        var paramsDict = [String:AnyObject]()
-        paramsDict = ["api_key_data":WebServices.API_KEY,
-                      "user_id":strUserId, "product_id":ProductInformation.productID!,"service_type":ProductInformation.productVehicle!,"country":"SG","merchant_name":strMarchantName,"merchant_phone": strMarchantNumber,"merchant_lat1":strMarchantLat ,"merchant_lang1": strMarchantLang ,"merchant_address1": strMarchantAddress ,"merchant_lat2": ProductInformation.productBuyerLat! ,"merchant_lang2":ProductInformation.productBuyerLang!,"merchant_address2":ProductInformation.productBuyerAddress! ,"delivery_user_name": strUserName ,"delivery_user_phone":"+65\(String(describing: strUserPhone))","delivery_remarks":self.strAdditionalNote,"total_amount":ProductInformation.productTotalFee!,"currency":"SGD","environment":"IOS","stripetoken":self.customerId,"payment_method":"Stripe","collection_method":strCollectionType,"collection_date":("\(ProductInformation.productFromDateUTC!)"),"return_method":strReturnType,"return_date":"\(ProductInformation.productToDateUTC!)","rental_period_days":ProductInformation.productRentalDays!,"shipping_amount":strCollectionCharge,"return_shipping_amount":strReturnCharge,"buyer_name":strUserName,"seller_id":strMarchantId,"rental_fee":ProductInformation.productRental!,"discount_price":strDiscount,"product_name":ProductInformation.productName!,"attribute1":strAttr1FullAttribute,"attribute2":strAttr2FullAttribute,"promo_code":strPromocode ,"additional_desc":strMarchantremark,"rental_period_startdate":ProductInformation.productFromDate!,"rental_period_enddate":ProductInformation.productToDate!,"product_fee":ProductInformation.productFee!,"product_fee_percentage":ProductInformation.productFeePercentage!,"start_time":self.strStartTime,"end_time":self.strStartTime] as [String : AnyObject]
-        
-        let preauthClass = self.storyboard?.instantiateViewController(withIdentifier: "PreAuthorizationViewController") as! PreAuthorizationViewController
-        preauthClass.paramsDictionary = paramsDict
-        self.navigationController?.pushViewController(preauthClass, animated: true)
-        
     }
+    
+    
+    func sendReferenceID(refid : String) {
+        
+        let paramsDic = ["api_key_data":WebServices.API_KEY,"reference_id" : refid]
+     
+        self.view.StartLoading()
+        ApiManager().postRequest(service: WebServices.PAYMENT_HISTORY, params: paramsDic) { (result, success) in
+            self.view.StopLoading()
+            
+            if success == false
+            {
+
+//               self.cardDisplayView.isHidden = false
+                 self.additionalInfoView.isHidden = true
+                self.btnConformPay.setTitle("Confirm Rental", for: UIControl.State.normal)
+                
+                self.showAlert(message: result as! String)
+                return
+            }
+            else
+            {
+                 self.scrollview.isHidden = false
+//                self.cardDisplayView.isHidden = true
+                self.additionalInfoView.isHidden = false
+                
+                self.btnConformPay.setTitle("Back To Home", for: UIControl.State.normal)
+                 self.btnConfirm = true
+               
+                
+                let response = result as! [String : Any]
+                let data = response ["data"] as! [String:Any]
+                
+                let summaryData = data["summary"] as? [AnyObject]
+                let feeData = summaryData![0]
+                
+                self.strRentalFee = feeData["total_rental_fee"] as! String
+                self.lbl_Price.text  = String(format: "$ %@", self.strRentalFee)
+                
+                self.strDeliveryfee = feeData["total_delivery_fee"] as! String
+                self.lbl_DeliveryFee.text  = String(format: "$ %@", self.strDeliveryfee)
+                
+                self.strPreauthFee =  feeData["total_preauth_fee"] as! String
+                self.lbl_preAuthAmount.text  = String(format: "$ %@",  self.strPreauthFee)
+                
+                self.lbl_promoCode.text  = String(format: "$ %@", feeData["total_prmocode_fee"] as! String)
+                
+                self.strTotalAmount = feeData["total_amount"] as! String
+                self.lbl_Total.text  = String(format: "$ %@",self.strTotalAmount )
+                
+                
+                self.arrAllItems = (data["all_items"] as? [AnyObject]) != nil  ?  (data["all_items"] as! [AnyObject]) : []
+                
+                
+                if self.arrAllItems.count > 0 {
+                    self.allItemsTV.reloadData()
+                }
+            }
+        }
+    }
+    
     
     @IBAction func btn_back_Tapped(_ sender: Any)
     {
-        self.navigationController?.popViewController(animated: true)
+        if !btnConfirm {
+            self.navigationController?.popViewController(animated: true)
+        }else{
+            let mainViewController = self.storyboard?.instantiateViewController(withIdentifier: "LGSideMenu") as! LGSideMenuController
+            self.present(mainViewController, animated: true, completion: nil)
+        }
     }
     
-    @IBAction func btn_chk_Tapped(_ sender: Any)
-    {
-        if termsAccept
-        {
-            termsAccept = false
-            btnCheck.setImage(#imageLiteral(resourceName: "uncheckPrivacy"), for:.normal)
-        }
-        else
-        {
-            termsAccept = true
-            btnCheck.setImage(#imageLiteral(resourceName: "checkPrivacy"), for:.normal)
-        }
-    }
-    @IBAction func btnPromoCode_Tapped(_ sender: Any)
-    {
+    @IBAction func btnPromoCode_Tapped(_ sender: Any)   {
         self.view.endEditing(true)
-       
+        
         if self.txtPromoCode.text == ""
         {
             self.showAlert(message: "Please Enter PromoCode")
@@ -203,91 +406,47 @@ class OrderConformationViewController: UIViewController ,UITextFieldDelegate
             return
         }
         
-        var promocodeType = ""
+        let paramsDict = ["api_key_data":WebServices.API_KEY,"promocode":self.txtPromoCode.text!,"rental_fee":self.strRentalFee ,"shipping_fee": self.strDeliveryfee ,"total_amount":self.strTotalAmount ]
         
-        if self.strPromoCodeType1 == "Lalamove" || self.strPromoCodeType2 ==  "Lalamove"
-        {
-            promocodeType = "lalamove"
-        }
-        else{
-            promocodeType = "Self"
-            
-        }
-        let paramsDict = ["api_key_data":WebServices.API_KEY,
-                          "promocode":self.txtPromoCode.text!,"shipping_method":promocodeType,"rental_fee":ProductInformation.productRental!,"shipping_fee":ProductInformation.productDeliveryCharges ?? "0"
-        ]
-        
-        print("\(paramsDict)")
         self.view.StartLoading()
-        ApiManager().postRequest(service:WebServices.APPLY_PROMOCODE, params: paramsDict)
+        ApiManager().postRequest(service:WebServices.CHECK_PROMOCODE, params: paramsDict)
         { (result, success) in
             self.view.StopLoading()
             
             if success == false
             {
                 self.showAlert(message: result as! String)
-                self.btnPromocode.setImage(#imageLiteral(resourceName: "notverified"), for: UIControlState.normal)
-                self.btnPromocode.backgroundColor = UIColor.clear
-                self.btnPromocode.setTitle("", for: UIControlState.normal)
                 self.btnPromocode.isUserInteractionEnabled = false
                 self.strPromocode = "0"
-                
+                self.lbl_promoCode.text = ""
                 
                 return
             }
             else
             {
-                
+                self.lbl_promoCode.text = "PROMO CODE APPLIED"
                 let response = result as! [String:Any]
                 let data = response["data"]as! [String:Any]
-                print(data)
                 
-                self.btnPromocode.setImage(#imageLiteral(resourceName: "verified"), for: UIControlState.normal)
-                self.btnPromocode.backgroundColor = UIColor.clear
-                self.btnPromocode.setTitle("", for: UIControlState.normal)
                 self.strPromocode = self.txtPromoCode.text!
                 self.btnPromocode.isUserInteractionEnabled = false
                 
-                let discount = data["discount"]as! String
+                self.strTotalAmount = data["total_amount"] as! String
+                self.lbl_Total.text  = String(format: "$ %@", self.strTotalAmount)
                 
-                let total = (Int(ProductInformation.productTotalFee!))! - (Int(discount))!
-                
-                ProductInformation.productDiscount = String(describing: data["discount"]!)
-                ProductInformation.productTotalFee = String(total)
-                
-               self.lbl_Price.text = "$\(ProductInformation.productRental!)"
-               self.lbl_DeliveryFee.text = "$\(ProductInformation.productDeliveryCharges ?? "0")"
-                self.lbl_Discount.text = "$\(ProductInformation.productDiscount ?? "0")"
-                
-                ProductInformation.productTotalFee = String(Int(ProductInformation.productRental!)! + Int(ProductInformation.productDeliveryCharges ?? "0")! - Int(ProductInformation.productDiscount ?? "0")!)
-
-                self.lbl_Total.text = "$\( ProductInformation.productTotalFee!)"
-                
+                self.strDiscount = data["discount_amount"] as! String
+                self.lbl_promoCode.text  = String(format: "$ %@", self.strDiscount)
                 
             }
         }
-        
     }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
     {
         if textField == self.txtPromoCode
         {
             self.btnPromocode.setTitle("APPLY", for: UIControlState.normal)
-            self.btnPromocode.backgroundColor = UIColor(red: 1.0/255.0, green: 87.0/255.0, blue: 150.0/255.0, alpha: 1.0)
-            self.btnPromocode.setImage(nil, for: UIControlState.normal)
             self.btnPromocode.isUserInteractionEnabled = true
-            
-            
-            //Adjusting Price Details after removing promocode
-            
-            
-            ProductInformation.productDiscount = "0"
-             ProductInformation.productTotalFee = String(Int(ProductInformation.productRental!)! + Int(ProductInformation.productDeliveryCharges ?? "0")! - Int(ProductInformation.productDiscount ?? "0")!)
-            self.lbl_Price.text = "$\(ProductInformation.productRental!)"
-            self.lbl_DeliveryFee.text = "$\(ProductInformation.productDeliveryCharges ?? "0")"
-            self.lbl_Discount.text = "$\(ProductInformation.productDiscount ?? "0")"
-            self.lbl_Total.text = "$\( ProductInformation.productTotalFee!)"
-            
             
         }
         return true
@@ -301,11 +460,21 @@ class OrderConformationViewController: UIViewController ,UITextFieldDelegate
     {
         let privacyVc = self.storyboard?.instantiateViewController(withIdentifier: "PrivacyPolicyViewController") as! PrivacyPolicyViewController
         privacyVc.urlIndex = 4
-        privacyVc.title = "Terms & Conditions"
+        privacyVc.title = "TERMS & CONDITIONS"
         self.navigationController?.pushViewController(privacyVc, animated: true)
     }
+   
+    
+    @IBAction func goToPrivacyPolicyConditions(_ sender: Any) {
+        let privacyVc = self.storyboard?.instantiateViewController(withIdentifier: "PrivacyPolicyViewController") as! PrivacyPolicyViewController
+        privacyVc.urlIndex = 0
+        privacyVc.title = "PRIVACY POLICY"
+        self.navigationController?.pushViewController(privacyVc, animated: true)
+    }
+    
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
+    
 }

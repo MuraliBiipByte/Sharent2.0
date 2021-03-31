@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import UITextView_Placeholder
 
-class BuyerRatingViewController: UIViewController,UITextViewDelegate
+class BuyerRatingViewController: UIViewController,UITextViewDelegate,FloatRatingViewDelegate
 {
 
-    var referenceId = String()
+    var strOrderId = String()
     var strUserId = String()
     var strUserType = String()
     var strProductId = String()
@@ -24,41 +25,13 @@ class BuyerRatingViewController: UIViewController,UITextViewDelegate
     {
         super.viewDidLoad()
         
-        ratingView.delegate = self as? FloatRatingViewDelegate
+        ratingView.delegate = self
         ratingView.contentMode = UIViewContentMode.scaleAspectFit
-        txtComment.text = "Write your comment"
-        txtComment.textColor = UIColor.lightGray
+        txtComment.placeholder = "Write your comment."
        
-        
         // Do any additional setup after loading the view.
     }
-    func textViewDidBeginEditing(_ textView: UITextView)
-    {
-        
-        if textView == txtComment
-        {
-            if self.txtComment.textColor == UIColor.lightGray
-            {
-                self.txtComment.text = nil
-                self.txtComment.textColor = Constants.NAVIGATION_COLOR
-            }
-        }
-       
-    }
-    func textViewDidEndEditing(_ textView: UITextView)
-    {
-        if textView == txtComment
-        {
-            
-            if self.txtComment.text.isEmpty
-            {
-                txtComment.text = "Write your comment"
-                txtComment.textColor = UIColor.lightGray
-                
-            }
-        }
-       
-    }
+    
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
@@ -70,20 +43,20 @@ class BuyerRatingViewController: UIViewController,UITextViewDelegate
     @IBAction func btnSubmitReview_Tapped(_ sender: Any)
     {
         self.view.endEditing(true)
-        if (txtComment.text?.isEmpty)!
-        {
-            self.showAlert(message: "Please enter your comment")
-            return
-        }
+        
         if self.ratingView.rating == 0.0
         {
             self.showAlert(message: "Please Choose Rating")
             return
         }
-        print(self.ratingView.rating)
+        if (txtComment.text?.isEmpty)! || txtComment.text == ""
+        {
+            self.showAlert(message: "Please enter your comment")
+            return
+        }
         
-        let paramsDic = ["api_key_data":WebServices.API_KEY,"product_id":strProductId,"user_id":strUserId,"rate":self.ratingView.rating,"comment":txtComment.text!,"reference_id":referenceId] as [String : Any]
-        print(paramsDic)
+        let paramsDic = ["api_key_data":WebServices.API_KEY,"product_id":strProductId,"user_id":strUserId,"rate":self.ratingView.rating,"comment":txtComment.text!,"order_id":strOrderId] as [String : Any]
+     
         self.view.StartLoading()
         ApiManager().postRequest(service: WebServices.BUYER_SUBMIT_RATING, params: paramsDic)
         { (result, success) in
@@ -105,11 +78,11 @@ class BuyerRatingViewController: UIViewController,UITextViewDelegate
  }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     func showAlertWithAction(message:String,selector:Selector)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithSelector(Title: "Ok", Selector:selector, Controller: self)], Controller: self)
     }
     
     @objc func backVc()

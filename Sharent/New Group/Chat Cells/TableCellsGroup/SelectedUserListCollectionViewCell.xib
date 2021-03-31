@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="2I5-Su-RMV" customClass="SelectedUserListCollectionViewCell" customModule="SendBird_iOS" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="40" height="90"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="40" height="90"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31K-mW-Dbn" userLabel="Profile Image Container View">
+                        <rect key="frame" x="0.0" y="14" width="40" height="40"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img_profile" translatesAutoresizingMaskIntoConstraints="NO" id="wnI-Zb-qx0" userLabel="Profile Image View">
+                                <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="btn_delete_user" translatesAutoresizingMaskIntoConstraints="NO" id="p4W-Gf-CL6" userLabel="Delete Image View">
+                                <rect key="frame" x="26" y="0.0" width="14" height="14.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="14.5" id="CsZ-T1-a9X"/>
+                                    <constraint firstAttribute="width" constant="14" id="fuB-VC-h93"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="wnI-Zb-qx0" secondAttribute="bottom" id="0eH-UF-c7G"/>
+                            <constraint firstAttribute="height" constant="40" id="2Rr-zZ-RuD"/>
+                            <constraint firstAttribute="trailing" secondItem="wnI-Zb-qx0" secondAttribute="trailing" id="9uT-WN-suY"/>
+                            <constraint firstItem="p4W-Gf-CL6" firstAttribute="top" secondItem="31K-mW-Dbn" secondAttribute="top" id="GIg-hN-WPe"/>
+                            <constraint firstAttribute="width" constant="40" id="MuU-uV-eUD"/>
+                            <constraint firstItem="wnI-Zb-qx0" firstAttribute="top" secondItem="31K-mW-Dbn" secondAttribute="top" id="Mva-IH-tJX"/>
+                            <constraint firstItem="wnI-Zb-qx0" firstAttribute="leading" secondItem="31K-mW-Dbn" secondAttribute="leading" id="vhF-f1-ofz"/>
+                            <constraint firstAttribute="trailing" secondItem="p4W-Gf-CL6" secondAttribute="trailing" id="xbF-nv-xaa"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Clc-qX-MM5" userLabel="Nickname Label">
+                        <rect key="frame" x="0.0" y="62" width="40" height="12"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Clc-qX-MM5" secondAttribute="trailing" id="043-hn-8vp"/>
+                <constraint firstItem="Clc-qX-MM5" firstAttribute="leading" secondItem="2I5-Su-RMV" secondAttribute="leading" id="16J-Jm-WlU"/>
+                <constraint firstItem="Clc-qX-MM5" firstAttribute="top" secondItem="31K-mW-Dbn" secondAttribute="bottom" constant="8" id="72K-Xe-khq"/>
+                <constraint firstItem="31K-mW-Dbn" firstAttribute="centerX" secondItem="2I5-Su-RMV" secondAttribute="centerX" id="TuX-N9-GBe"/>
+                <constraint firstItem="31K-mW-Dbn" firstAttribute="top" secondItem="2I5-Su-RMV" secondAttribute="top" constant="14" id="coa-8s-TRe"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="7Pj-m0-mP2"/>
+            <size key="customSize" width="40" height="90"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                    <integer key="value" value="20"/>
+                </userDefinedRuntimeAttribute>
+                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="nicknameLabel" destination="Clc-qX-MM5" id="UZy-4a-2Db"/>
+                <outlet property="profileImageView" destination="wnI-Zb-qx0" id="cUz-Xo-Kgb"/>
+            </connections>
+            <point key="canvasLocation" x="20" y="67"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="btn_delete_user" width="14" height="14.5"/>
+        <image name="img_profile" width="58.5" height="58.5"/>
+    </resources>
+</document>

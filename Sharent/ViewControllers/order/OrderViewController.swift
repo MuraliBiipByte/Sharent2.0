@@ -12,8 +12,9 @@ import GooglePlaces
 import GooglePlacePicker
 import GoogleMaps
 import Stripe
+import UITextView_Placeholder
 
-class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelegate
+class OrderViewController: UIViewController,UITextFieldDelegate
 {
     
     
@@ -75,85 +76,42 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
     var minimumTime = String()
     var strPromoCodeType1 = ""
     var strPromoCodeType2 = ""
-
+    
     var refStr = String()
     var recentCard = String()
     var recentCardName = String()
-
+    
     
     var strDeliveryRemarks = String()
     var strMerchantRemarks = String()
- 
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
         self.title = "Checkout"
         
-        txtAddionalNote.text = "E.g Unit Number, Comments for driver"
-        txtAddionalNote.textColor = UIColor.lightGray
-        txtMarchantRemarks.text = "E.g Any special request for the merchant"
-        txtMarchantRemarks.textColor = UIColor.lightGray
+        txtAddionalNote.placeholder = "E.g Unit Number, Comments for driver"
+        txtMarchantRemarks.placeholder = "E.g Any special request for the merchant"
         
         strUserId = UserDefaults.standard.value(forKey: "user_id")! as! String
         strUserName = UserDefaults.standard.value(forKey: "userName")! as! String
         strUserPhone = UserDefaults.standard.value(forKey: "user-phone")! as! String
-    
-        print("Product is is \(strProductId)")
+        
         placesClient = GMSPlacesClient.shared()
         
         arrCollectionType = ["Lalamove","Self Collection"]
         arrReutrnType = ["Lalamove","Self Return"]
-       
+        
         
         self.lblMarchant_address.text = "  \(ProductInformation.marchantAddress ?? "")"
         
-        let total = Int(ProductInformation.productPrice!)! -  Int(ProductInformation.productDiscount ?? "0" )!
+        let total = Float(ProductInformation.productPrice!)! -  Float(ProductInformation.productDiscount ?? "0.00" )!
         ProductInformation.productTotalFee = String(total)
         
         self.getRecentCard()
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView)
-    {
-        
-        if textView == txtAddionalNote
-        {
-            if self.txtAddionalNote.textColor == UIColor.lightGray
-            {
-                self.txtAddionalNote.text = nil
-                self.txtAddionalNote.textColor = Constants.NAVIGATION_COLOR
-            }
-        }
-       else
-        {
-            if self.txtMarchantRemarks.textColor == UIColor.lightGray
-            {
-            self.txtMarchantRemarks.text = nil
-            self.txtMarchantRemarks.textColor = Constants.NAVIGATION_COLOR
-            }
-        }
-    }
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView == txtAddionalNote
-        {
-        
-            if self.txtAddionalNote.text.isEmpty
-            {
-            txtAddionalNote.text = "E.g Unit Number, Comments for driver"
-            txtAddionalNote.textColor = UIColor.lightGray
-         
-            }
-        }
-        else{
-            if self.txtMarchantRemarks.text.isEmpty
-            {
-         
-            txtMarchantRemarks.text = "E.g Any special request for the merchant"
-            txtMarchantRemarks.textColor = UIColor.lightGray
-            }
-        }
-    }
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
@@ -173,6 +131,8 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
         let cardImage = STPImageLibrary.brandImage(for: cardName1)
         self.cardImage.image = cardImage
         self.btnChangeCard .setTitle("CHANGE", for: UIControlState.normal)
+        self.cardNumberHeight.constant = 15
+        self.cardNameHeight.constant = 15
     }
     @IBAction func btn_EndDate_Tapped(_ sender: Any)
     {
@@ -207,7 +167,7 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
             ProductInformation.productFromDate = self.startdate
             ProductInformation.productToDate = self.enddate
             
-
+            
             let finalStartDateTime = String(format: "%@ %@:00", self.startdate,self.strStartTime)
             
             let finalEndDateTime = String(format: "%@ %@:00", self.enddate,self.strStartTime)
@@ -231,21 +191,15 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
             
             
             ProductInformation.productFromDateUTC = formatter.string(from: convertedDate!)
-            print(ProductInformation.productFromDateUTC!)
-            
-            
+         
             ProductInformation.productToDateUTC = formatter.string(from:convertedDate1!)
-            print(ProductInformation.productToDateUTC!)
+           
+            ProductInformation.productRentalDays = String(differenceInDays)
+            ProductInformation.productRental = String("\(Float(differenceInDays) * Float(ProductInformation.productPrice!)! )" )
             
-            ProductInformation.productRentalDays = String("\(differenceInDays)")
-            ProductInformation.productRental = String("\(differenceInDays * Int(ProductInformation.productPrice!)! )" )
-            
-            let total = Int(ProductInformation.productRental!)! -  Int(ProductInformation.productDiscount ?? "0" )!
+            let total = Float(ProductInformation.productRental!)! -  Float(ProductInformation.productDiscount ?? "0.00" )!
             ProductInformation.productTotalFee = String(total)
-            
-            print(differenceInDays)
-            
-            
+          
             return
         }, cancel: { ActionStringCancelBlock in return }, origin: (sender as AnyObject).superview!?.superview)
         
@@ -253,13 +207,13 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
         
         datePicker?.minimumDate = tomorrow
         datePicker?.show()
-
-     
+        
+        
     }
     
     @IBAction func btn_StartDate_Tapped(_ sender: Any)
     {
-      
+        
         self.view.endEditing(true)
         
         self.btnEndDate.setTitle("  Select", for: UIControlState.normal)
@@ -317,9 +271,22 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
             
             let dateFormatte = DateFormatter()
             dateFormatte.dateFormat = "HH:mm"
-            
             self.strStartTime = dateFormatte.string(from: value as! Date)
-            self.btnStartTime.setTitle("  \(self.strStartTime)", for: UIControlState.normal)
+            
+            let fullNameArr = self.strStartTime.components(separatedBy: ":")
+            let hour    = fullNameArr[0]
+            //let minutes    = fullNameArr[1]
+            
+            if Int(hour)! < 10 || Int(hour)! >= 17
+            {
+                self.showAlert(message: "We will process orders only between 10AM to 5PM")
+                self.strStartTime = ""
+                return
+            }
+            else
+            {
+                self.btnStartTime.setTitle("  \(self.strStartTime)", for: UIControlState.normal)
+            }
             return
             
         }, cancel: { ActionStringCancelBlock in return }, origin: (sender as AnyObject).superview!?.superview)
@@ -328,59 +295,59 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
         {
             datePicker?.minimumDate = extendedTime
         }
+        
         datePicker?.show()
         
     }
-
+    
     @IBAction func btn_CollectionType_Tapped(_ sender: Any)
     {
         self.view.endEditing(true)
-
+        
         ActionSheetStringPicker.show(withTitle: "Select Method", rows: arrCollectionType as? [Any], initialSelection: 0, doneBlock:
             {
-            picker, value, index in
+                picker, value, index in
+                
             
-            print("value = \(value)")
-            self.strCollectionType = (String(describing: index!) )
-            self.strPromoCodeType1 = (String(describing: index!) )
-            self.btnCollectionType.setTitle("  \(self.strCollectionType)", for: UIControlState.normal)
-            if let spaceRange = self.strCollectionType.range(of: " ")
-            {
-        self.strPromoCodeType1.removeSubrange(spaceRange.lowerBound..<self.strCollectionType.endIndex)
-        self.strCollectionType.removeSubrange(spaceRange.lowerBound..<self.strCollectionType.endIndex)
-            }
- 
-            return
+                self.strCollectionType = (String(describing: index!) )
+                self.strPromoCodeType1 = (String(describing: index!) )
+                self.btnCollectionType.setTitle("  \(self.strCollectionType)", for: UIControlState.normal)
+                if let spaceRange = self.strCollectionType.range(of: " ")
+                {
+                    self.strPromoCodeType1.removeSubrange(spaceRange.lowerBound..<self.strCollectionType.endIndex)
+                    self.strCollectionType.removeSubrange(spaceRange.lowerBound..<self.strCollectionType.endIndex)
+                }
+                
+                return
         }, cancel: { ActionStringCancelBlock in return }, origin: sender)
     }
     
     @IBAction func btn_ReturnType_Tapped(_ sender: Any)
     {
         self.view.endEditing(true)
-
         
-        ActionSheetStringPicker.show(withTitle: "Select Method", rows: arrReutrnType as! [Any], initialSelection: 0, doneBlock:
+        
+        ActionSheetStringPicker.show(withTitle: "Select Method", rows: arrReutrnType as? [Any], initialSelection: 0, doneBlock:
             {
-            picker, value, index in
-            
-            print("value = \(value)")
-            
-            self.strReturnType = (String(describing: index!) )
-            self.strPromoCodeType2 = (String(describing: index!) )
-            self.btnReturnType.setTitle("  \(self.strReturnType)", for: UIControlState.normal)
-            if let spaceRange = self.strReturnType.range(of: " ")
-            {
-        self.strPromoCodeType2.removeSubrange(spaceRange.lowerBound..<self.strReturnType.endIndex)
-        self.strReturnType.removeSubrange(spaceRange.lowerBound..<self.strReturnType.endIndex)
-            }
-            return
+                picker, value, index in
+               
+                
+                self.strReturnType = (String(describing: index!) )
+                self.strPromoCodeType2 = (String(describing: index!) )
+                self.btnReturnType.setTitle("  \(self.strReturnType)", for: UIControlState.normal)
+                if let spaceRange = self.strReturnType.range(of: " ")
+                {
+                    self.strPromoCodeType2.removeSubrange(spaceRange.lowerBound..<self.strReturnType.endIndex)
+                    self.strReturnType.removeSubrange(spaceRange.lowerBound..<self.strReturnType.endIndex)
+                }
+                return
         }, cancel: { ActionStringCancelBlock in return }, origin: sender)
     }
     
     @IBAction func btn_ProceedTotap_Tapped(_ sender: Any)
     {
         self.view.endEditing(true)
-
+        
         if self.startdate .isEmpty || self.strStartTime .isEmpty
         {
             self.showAlert(message: "Please Select Start Date and Time")
@@ -411,146 +378,131 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
             self.showAlert(message: "Please Enter Delivery Address")
             return
         }
-        if self.txtAddionalNote.text != ""
+        if (txtAddionalNote.text?.isEmpty)! || txtAddionalNote.text == ""
         {
-            if self.txtAddionalNote.textColor == UIColor.lightGray
-            {
-                self.strDeliveryRemarks = "NA"
-            }
-            else
-            {
-                self.strDeliveryRemarks = self.txtAddionalNote.text
-            }
+            self.strDeliveryRemarks = "NA"
         }
-        if self.txtMarchantRemarks.text != ""
+        if txtAddionalNote.text != ""
         {
-            if self.txtMarchantRemarks.textColor == UIColor.lightGray
-            {
-                self.strMerchantRemarks = "NA"
-            }
-            else
-            {
-                self.strMerchantRemarks = self.txtMarchantRemarks.text
-            }
+            self.strDeliveryRemarks = txtAddionalNote.text
+        }
+        if (txtMarchantRemarks.text?.isEmpty)! || txtMarchantRemarks.text == ""
+        {
+            self.strMerchantRemarks = "NA"
+        }
+        if txtMarchantRemarks.text != ""
+        {
+            self.strMerchantRemarks = txtMarchantRemarks.text
         }
         if self.customerId.isEmpty
         {
             self.showAlert(message: "Please Add Card")
             return
         }
-
+        
         if self.strCollectionType == "Self" && self.strReturnType == "Self"
         {
-
+            
+            ProductInformation.productDeliveryCharges = "0"
             let summurypage = self.storyboard?.instantiateViewController(withIdentifier: "OrderConformationViewController")as! OrderConformationViewController
-            summurypage.strDeliveryFee = "0"
-            summurypage.strProductId = self.strProductId
-            summurypage.strFromDate = self.startdate
-            summurypage.strToDate = self.enddate
-            summurypage.strCollectionType = self.strCollectionType
-            summurypage.strReturnType = self.strReturnType
-            summurypage.strCollectionCharge = "0"
-            summurypage.strReturnCharge = "0"
-            summurypage.strPromocode = "0"
-            summurypage.strPaymentMethode = self.strPaymentMethod
-            summurypage.strPromoCodeType1 = self.strPromoCodeType1
-            summurypage.strPromoCodeType2 = self.strPromoCodeType2
+            //summurypage.strDeliveryFee = "0"
+//            summurypage.strProductId = self.strProductId
+//            summurypage.strFromDate = self.startdate
+//            summurypage.strToDate = self.enddate
+//            summurypage.strCollectionType = self.strCollectionType
+//            summurypage.strReturnType = self.strReturnType
+//            summurypage.strCollectionCharge = "0"
+//            summurypage.strReturnCharge = "0"
+//            summurypage.strPromocode = "0"
+//            summurypage.strPaymentMethode = self.strPaymentMethod
+//            summurypage.strPromoCodeType1 = self.strPromoCodeType1
+//            summurypage.strPromoCodeType2 = self.strPromoCodeType2
             summurypage.customerId = self.customerId
-            summurypage.strStartTime = self.strStartTime
-
-
-        self.navigationController?.pushViewController(summurypage, animated: true)
-
+//            summurypage.strStartTime = self.strStartTime
+            
+            
+            self.navigationController?.pushViewController(summurypage, animated: true)
+            
             return
-
+            
         }
-
+        
         let strMarchantName = ProductInformation.marchantName ?? ""
         let strMarchantNumber = ProductInformation.marchantNumber ?? ""
         let strMarchantLat = ProductInformation.marchantLat ?? ""
         let strMarchantLang = ProductInformation.marchantLang ?? ""
         let strMarchantAddress =  ProductInformation.marchantAddress ?? ""
-
-        print(ProductInformation.productVehicle ?? "")
-
+        
+        
         let paramsDict = ["api_key_data":WebServices.API_KEY,
                           "user_id":strUserId, "product_id":strProductId,"service_type":ProductInformation.productVehicle ?? "","country":"SG","merchant_name":strMarchantName,"merchant_phone": strMarchantNumber,"merchant_lat1":strMarchantLat  ,"merchant_lang1": strMarchantLang ,"merchant_address1": strMarchantAddress ,"merchant_lat2": ProductInformation.productBuyerLat! ,"merchant_lang2":ProductInformation.productBuyerLang!,"merchant_address2":ProductInformation.productBuyerAddress! ,"delivery_user_name": strUserName ,"delivery_user_phone":"\(String(describing: "+65"))\(String(describing: strUserPhone))","delivery_remarks":self.txtAddionalNote.text! ,"collection_method":strCollectionType,"collection_date":ProductInformation.productFromDateUTC!,"return_method":strReturnType,"return_date":ProductInformation.productToDateUTC!]
-        print(paramsDict)
+    
         self.view.StartLoading()
         ApiManager().postRequest(service:WebServices.PROCEED_ORDER, params: paramsDict )
         { (result, success) in
             self.view.StopLoading()
-
+            
             if success == false
             {
                 self.showAlert(message: result as! String)
-
-
+                
+                
                 return
             }
             else
             {
-
+                
                 let response = result as! [String:Any]
                 let data = response["data"]as! [String:Any]
-                print(data)
-
+             
                 let result = data["results"]as! [String:Any]
-                print(result)
-
+               
                 let qutation = result["quotation"]as! [String:Any]
-                print(qutation)
-
+               
                 var collectionCharge = String()
                 var returnCharge = String()
-
+                
                 if self.strCollectionType == "Lalamove"
                 {
-                     collectionCharge = qutation["collection_fee"]as! String
-                    print(collectionCharge)
-
+                    collectionCharge = qutation["collection_fee"]as! String
+                    
                 }
-
+                    
                 else
                 {
                     collectionCharge = "0"
-                    print(collectionCharge)
-
+                  
                 }
                 if self.strReturnType == "Lalamove"
                 {
-                     returnCharge = qutation["return_fee"]as! String
-                    print(returnCharge)
+                    returnCharge = qutation["return_fee"]as! String
+                    
                 }
                 else
                 {
                     returnCharge = "0"
-                    print(returnCharge)
-
+                  
                 }
-
-
+                
                 let deliveryCharge = Int(collectionCharge)! + Int(returnCharge)!
-                print(deliveryCharge)
-
+               
                 ProductInformation.productDeliveryCharges = String(deliveryCharge)
-
+                
                 let summurypage = self.storyboard?.instantiateViewController(withIdentifier: "OrderConformationViewController")as! OrderConformationViewController
-                summurypage.strCollectionType = self.strCollectionType
-                summurypage.strReturnType = self.strReturnType
-                summurypage.strCollectionCharge = collectionCharge
-                summurypage.strReturnCharge = returnCharge
-                summurypage.strPromocode = "0"
-                summurypage.strAdditionalNote = self.strDeliveryRemarks
-                summurypage.strPaymentMethode = self.strPaymentMethod
-                summurypage.strMarchantremark = self.strMerchantRemarks
-                summurypage.strPromoCodeType1 = self.strPromoCodeType1
-                summurypage.strPromoCodeType2 = self.strPromoCodeType2
+//                summurypage.strCollectionType = self.strCollectionType
+//                summurypage.strReturnType = self.strReturnType
+//                summurypage.strCollectionCharge = collectionCharge
+//                summurypage.strReturnCharge = returnCharge
+//                summurypage.strPromocode = "0"
+//                summurypage.strAdditionalNote = self.strDeliveryRemarks
+//                summurypage.strPaymentMethode = self.strPaymentMethod
+//                summurypage.strMarchantremark = self.strMerchantRemarks
+//                summurypage.strPromoCodeType1 = self.strPromoCodeType1
+//                summurypage.strPromoCodeType2 = self.strPromoCodeType2
                 summurypage.customerId = self.customerId
-                summurypage.strStartTime = self.strStartTime
+//                summurypage.strStartTime = self.strStartTime
                 self.navigationController?.pushViewController(summurypage, animated: true)
-
-
+                
             }
         }
     }
@@ -561,45 +513,45 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
     }
     func getRecentCard()
     {
-            let paramsDic = ["api_key_data":WebServices.API_KEY,"user_id":strUserId]
-            self.view.StartLoading()
-            ApiManager().postRequest(service:WebServices.LALAMOVE_GET_RECENT_CARD, params: paramsDic )
-            { (result, success) in
-                self.view.StopLoading()
-                
-                if success == false
-                {
-                    self.cardNameHeight.constant = 40
-                    self.cardNumberHeight.constant = 0
-                    self.lblCardName.text = "Add New Card"
-                    self.lblCardNumber.text = ""
-                    self.btnChangeCard .setTitle("ADD", for: UIControlState.normal)
-                    return
-                }
-                else
-                {
-                    self.cardNumberHeight.constant = 15
-                    self.cardNameHeight.constant = 15
-                    let response = result as! [String:Any]
-                    let data = response["data"]as! [String:Any]
-                    let recentCard = data["recent_card"]as! [String:Any]
-                    let cardNumber = String(format: "**** **** **** %@", recentCard["card_last4"] as! String )
-                    let cardName = recentCard["card_brand"]as? String
-                    self.lblCardName.text = cardName
-                    self.lblCardNumber.text = cardNumber
-                    self.customerId = recentCard["customer_id"] as! String
-                    let cardName1 = STPCard.brand(from: cardName!)
-                    let cardImage = STPImageLibrary.brandImage(for: cardName1)
-                    self.cardImage.image = cardImage
-                }
+        let paramsDic = ["api_key_data":WebServices.API_KEY,"user_id":strUserId]
+        self.view.StartLoading()
+        ApiManager().postRequest(service:WebServices.LALAMOVE_GET_RECENT_CARD, params: paramsDic )
+        { (result, success) in
+            self.view.StopLoading()
+            
+            if success == false
+            {
+                self.cardNameHeight.constant = 40
+                self.cardNumberHeight.constant = 0
+                self.lblCardName.text = "Add New Card"
+                self.lblCardNumber.text = ""
+                self.btnChangeCard .setTitle("ADD", for: UIControlState.normal)
+                return
             }
+            else
+            {
+                self.cardNumberHeight.constant = 15
+                self.cardNameHeight.constant = 15
+                let response = result as! [String:Any]
+                let data = response["data"]as! [String:Any]
+                let recentCard = data["recent_card"]as! [String:Any]
+                let cardNumber = String(format: "**** **** **** %@", recentCard["card_last4"] as! String )
+                let cardName = recentCard["card_brand"]as? String
+                self.lblCardName.text = cardName
+                self.lblCardNumber.text = cardNumber
+                self.customerId = recentCard["customer_id"] as! String
+                let cardName1 = STPCard.brand(from: cardName!)
+                let cardImage = STPImageLibrary.brandImage(for: cardName1)
+                self.cardImage.image = cardImage
+            }
+        }
         
         
     }
     @IBAction func btn_backtapped(_ sender: Any)
     {
         self.view.endEditing(true)
-
+        
         self.navigationController?.popViewController(animated: true)
         
     }
@@ -608,7 +560,7 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
     {
         
         self.arrAddress.removeAll()
-
+        
         self.arrAddress.append(((UserDefaults.standard.value(forKey: "address")) != nil ? (UserDefaults.standard.value(forKey: "address") as! String) : ""))
         if self.arrAddress[0] == ""
         {
@@ -624,10 +576,7 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
             self.arrAddress.append("Add New Address")
             ActionSheetStringPicker.show(withTitle: "Select Address ", rows: self.arrAddress, initialSelection: 0, doneBlock: {
                 picker, value, index in
-                
-                print("value = \(value)")
-                print("index = \(String(describing: index))")
-                
+               
                 if value == 0
                 {
                     
@@ -638,17 +587,19 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
                     {
                         self.showAlert(message: "Please Select Different Address")
                     }
-                    else{
+                    else
+                    {
                         self.lblAddress.text = "\(UserDefaults.standard.value(forKey: "address") as! String)"
-
+                        
                         ProductInformation.productBuyerLat =  "\(UserDefaults.standard.value(forKey: "lat") as! String)"
                         ProductInformation.productBuyerLang = "\(UserDefaults.standard.value(forKey: "lng") as! String)"
                         ProductInformation.productBuyerAddress = "\(UserDefaults.standard.value(forKey: "address") as! String)"
                     }
-                        
+                    
                     
                 }
-                else{
+                else
+                {
                     let autocompleteController = GMSAutocompleteViewController()
                     let filter = GMSAutocompleteFilter()
                     filter.country = "SG"
@@ -656,7 +607,7 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
                     autocompleteController.delegate = self
                     self.present(autocompleteController, animated: true, completion: nil)
                 }
-             
+                
                 
                 return
             }, cancel: { ActionStringCancelBlock in return }, origin: sender)
@@ -665,11 +616,11 @@ class OrderViewController: UIViewController,UITextFieldDelegate,UITextViewDelega
         
         
         
-       
+        
     }
     func showAlert(message:String)
     {
-        Message.shared.Alert(Title: Constants.APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
+        Message.shared.Alert(Title:APP_NAME, Message: message, TitleAlign: .normal, MessageAlign: .normal, Actions: [Message.AlertActionWithOutSelector(Title: "Ok")], Controller: self)
     }
     
 }
@@ -678,17 +629,17 @@ extension OrderViewController: GMSAutocompleteViewControllerDelegate {
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         
-       self.lblAddress.text = "\(place.name),\(place.formattedAddress!)"
-    
-        print("\(place.name)")
-       
+        self.lblAddress.text = "\(place.name),\(place.formattedAddress!)"
+        
+        
         ProductInformation.productBuyerLat =  "\(place.coordinate.latitude)"
         ProductInformation.productBuyerLang = "\(place.coordinate.longitude)"
         ProductInformation.productBuyerAddress = "\(place.name),\(place.formattedAddress!)"
         dismiss(animated: true, completion: nil)
     }
     
-    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error)
+    {
         // TODO: handle the error.
         print("Error: ", error.localizedDescription)
     }

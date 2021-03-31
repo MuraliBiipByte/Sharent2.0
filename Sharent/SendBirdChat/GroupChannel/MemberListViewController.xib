@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MemberListViewController" customModule="ChatSharent" customModuleProvider="target">
+            <connections>
+                <outlet property="navItem" destination="SaE-hf-SrU" id="uSF-4U-FpR"/>
+                <outlet property="tableView" destination="8CX-dt-T6X" id="3mB-VW-r9A"/>
+                <outlet property="view" destination="9Ga-Rw-QQY" id="E0L-AV-l5b"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="9Ga-Rw-QQY">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OiU-1W-6Zd" customClass="CustomNavigationBar" customModule="SendBird_iOS" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="16z-ex-KmM"/>
+                    </constraints>
+                    <items>
+                        <navigationItem title="Member List" id="SaE-hf-SrU"/>
+                    </items>
+                </navigationBar>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="8CX-dt-T6X" userLabel="Member List Table View">
+                    <rect key="frame" x="0.0" y="64" width="414" height="832"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <inset key="separatorInset" minX="64" minY="0.0" maxX="0.0" maxY="0.0"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="8CX-dt-T6X" secondAttribute="trailing" id="27V-Ct-hhk"/>
+                <constraint firstAttribute="trailing" secondItem="OiU-1W-6Zd" secondAttribute="trailing" id="G7l-XZ-qgs"/>
+                <constraint firstItem="OiU-1W-6Zd" firstAttribute="leading" secondItem="9Ga-Rw-QQY" secondAttribute="leading" id="I0W-UB-ask"/>
+                <constraint firstAttribute="bottom" secondItem="8CX-dt-T6X" secondAttribute="bottom" id="Lgr-Lr-mnh"/>
+                <constraint firstItem="8CX-dt-T6X" firstAttribute="top" secondItem="OiU-1W-6Zd" secondAttribute="bottom" id="OHp-BX-J3K"/>
+                <constraint firstItem="8CX-dt-T6X" firstAttribute="leading" secondItem="9Ga-Rw-QQY" secondAttribute="leading" id="can-mP-edg"/>
+                <constraint firstItem="OiU-1W-6Zd" firstAttribute="top" secondItem="9Ga-Rw-QQY" secondAttribute="top" id="ftU-gO-T19"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="IbK-8L-FE2"/>
+            <point key="canvasLocation" x="24" y="52"/>
+        </view>
+    </objects>
+</document>
